@@ -1,43 +1,31 @@
-#include <HTTPClient.h>
+#include <SPI.h>
+#include <SD.h>
 
-const char* serverName = "http://192.168.0.123:8000/sensor";  // Substitua com o IP real
-
-#define buttonPin 22  // Pino conectado ao botão (sensor)
+File dataFile;
 
 void setup() {
+  // Inicializa a comunicação serial com o computador
   Serial.begin(115200);
-  pinMode(buttonPin, INPUT_PULLUP);  // Configura o botão como entrada com pull-up interno
 
-  Serial.println("Iniciando...");
+  // Inicializa o cartão SD. O pino CS do cartão SD está no pino 5
+  if (!SD.begin(5)) {
+    Serial.println("Falha ao inicializar o cartão SD.");
+    return;
+  }
+
+  // Tenta abrir o arquivo "data.txt" no cartão SD para escrita
+  dataFile = SD.open("data.txt", FILE_WRITE);
+  
+  if (dataFile) {
+    // Se o arquivo foi aberto com sucesso, escreve "Hello, World!" nele
+    dataFile.println("Hello, World!");
+    dataFile.close();  // Fecha o arquivo após a escrita
+    Serial.println("Escrita bem-sucedida no cartão SD.");
+  } else {
+    Serial.println("Falha ao abrir o arquivo.");
+  }
 }
 
 void loop() {
-  int buttonState = digitalRead(buttonPin);  // Lê o estado do botão
-
-  bool presenca = (buttonState == LOW);  // Pressionado = presença detectada
-  Serial.print("Presença detectada: ");
-  Serial.println(presenca ? "Sim" : "Não");
-
-  HTTPClient http;
-  http.begin(serverName);  // Inicia a requisição HTTP
-
-  http.addHeader("Content-Type", "application/json");
-
-  // Criando o corpo JSON para enviar ao servidor
-  String json = "{\"presenca\": " + String(presenca ? "true" : "false") + "}";
-
-  // Envia os dados via POST
-  int httpResponseCode = http.POST(json);
-
-  if (httpResponseCode > 0) {
-    String response = http.getString();
-    Serial.println("Resposta do servidor: " + response);
-  } else {
-    Serial.print("Erro na requisição: ");
-    Serial.println(httpResponseCode);
-  }
-
-  http.end();  // Finaliza a requisição HTTP
-
-  delay(10000);  // Aguarda 10 segundos antes da próxima leitura
+  // Nada necessário aqui, pois o código de gravação acontece apenas uma vez no setup
 }
