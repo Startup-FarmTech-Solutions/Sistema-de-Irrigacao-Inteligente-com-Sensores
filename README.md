@@ -62,20 +62,7 @@ A bomba de irrigação será ligada automaticamente quando:
 
 ## 💻 Estrutura dos Arquivos
 
-/FarmTech-Solutions
-│
-├── src/
-│ └── main.cpp # Código C++ para ESP32
-│
-├── python/
-│ ├── banco_dados.py # Script Python para banco SQL (CRUD)
-│ ├── dashboard.py # Dashboard em Streamlit
-│ └── clima_api.py # Integração com API do clima
-│
-├── imagens/
-│ └── circuito_wokwi.png # Imagem do circuito montado
-│
-└── README.md # Documentação do projeto
+
 
 
 ---
