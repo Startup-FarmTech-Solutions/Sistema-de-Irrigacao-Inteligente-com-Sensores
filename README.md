@@ -121,6 +121,19 @@ python3 clima_api.py
 
 📸 Circuito (Wokwi)
 
+## Circuito com botão e ESP32
+![Botão e ESP32](imagens/captura-botao1.png)
+
+## Circuito com sensor DHT22 e display I2C
+![DHT22 e LCD](imagens/captura-dht22-lcd.png)
+
+## Circuito com sensor de umidade de solo
+![Sensor de umidade](imagens/captura-umidade.png)
+
+## Outro botão com ESP32
+![Botão e ESP32 2](imagens/captura-botao2.png)
+
+
 🤝 Contribuição
 Contribuições são bem-vindas! Sinta-se livre para abrir issues ou pull requests.
 
