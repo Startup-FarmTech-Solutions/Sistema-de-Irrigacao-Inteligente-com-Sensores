@@ -121,7 +121,7 @@ python3 clima_api.py
 
 📸 Circuito (Wokwi)
 
-![Captura de tela 2025-05-05 222645](https://github.com/user-attachments/assets/6f9b23ea-5363-45ea-9449-03db14959a9d)
+[Captura de tela 2025-05-05 222645](https://github.com/user-attachments/assets/6f9b23ea-5363-45ea-9449-03db14959a9d)
 
 
 
