@@ -128,7 +128,7 @@ python3 clima_api.py
 ![DHT22 e LCD](imagens_dos_circuitos/imagens/sensor_ph.png)
 
 ## Circuito com sensor de umidade de solo
-![Sensor de umidade](imagens_dos_circuitos/imagens/sensor-umidade.png)
+![Sensor de umidade](imagens_dos_circuitos/imagens/captura-umidade.png)
 
 ## Outro botão com ESP32
 ![Botão e ESP32 2](imagens_dos_circuitos/imagens/sensor_fosforo.png)
