@@ -1,8 +1,11 @@
 # FIAP - Faculdade de Informática e Administração Paulista 
 
 <p align="center">
-<a href= "https://www.fiap.com.br/"><img src="assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Admnistração Paulista" border="0" width=40% height=40%></a>
+  <a href="https://www.fiap.com.br/">
+    <img src="assets/logo-fiap.png" alt="FIAP" width="40%">
+  </a>
 </p>
+
 
 <br>
 
@@ -71,10 +74,17 @@ A bomba de irrigação será ligada automaticamente quando:
 
 ## imagens dos circuitos
 
-![sensorde umidade](imagens_dos_circuitos/captura-umidade.png)
-![sensor de fosforo](imagens_dos_circuitos/sensor_fosforo.png)
-![sensor de ph](imagens_dos_circuitos/sensor_ph)
-![sensor de potassio](imagens_dos_circuitos/sensor_fosforo)
+### Sensor de Umidade
+<img src="assets/imagens_dos_circuitos/imagens/captura-umidade.png" alt="Sensor de umidade" width="300">
+
+### Sensor de Fósforo
+<img src="assets/imagens_dos_circuitos/imagens/sensor_fosforo.png" alt="Sensor de fósforo" width="300">
+
+### Sensor de pH
+<img src="assets/imagens_dos_circuitos/imagens/sensor_ph.png" alt="Sensor de pH" width="300">
+
+### Sensor de Potássio
+<img src="assets/imagens_dos_circuitos/imagens/sensor_potassio.png" alt="Sensor de potássio" width="300">
 
 
 ---
