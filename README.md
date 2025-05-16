@@ -91,7 +91,7 @@ A bomba de irrigação será ligada automaticamente quando:
 
 
 ## 📁 Estrutura de pastas
-
+```
 Sistema-de-Irrigacao-Inteligente-com-Sensores
 ├── pycache/ # Arquivos compilados automaticamente pelo Python
 ├── .vscode/ # Configurações do Visual Studio Code
@@ -102,30 +102,30 @@ Sistema-de-Irrigacao-Inteligente-com-Sensores
 ├── sensor_umidade/ # Código relacionado ao sensor de umidade do solo
 ├── main.py # Script principal do sistema
 └── README.md # Documentação do projeto
-
-## 🔧 Como executar o código
 ```
+## 🔧 Como executar o código
+
 1. clone o repositório
 ```bash
 git clone https://github.com/seuusuario/Sistema-de-Irrigacao-Inteligente-com-Sensores.git
 cd Sistema-de-Irrigacao-Inteligente-com-Sensores
-
+```
 
 2. Crie um ambiente virtual
 ```bash
 python -m venv venv
 source venv/bin/activate  # No Windows use: venv\Scripts\activate
-
+```
 3. Instale as dependências:
 ```bash
 pip install fastapi uvicorn
-
+```
 4. Execute o servidor FastAPI:
 ```bash
 uvicorn main:app --reload
-
+```
 5. Teste a API no navegador ou com uma ferramenta como Postman
-
+```
 Após rodar o comando:
 
 
