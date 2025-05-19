@@ -1,8 +1,17 @@
+<<<<<<< HEAD
 // #include <WiFi.h>
 // #include <WiFiClient.h>
+=======
+>>>>>>> a82f369e5d73795d4996551198ba40d078a69f7b
 #include <ArduinoJson.h>
 #include <LiquidCrystal_I2C.h>
 #include <DHT.h>
+#include <FS.h>
+#include <SPIFFS.h>
+#include <CJSON.h>
+#include <WiFi.h>         // Biblioteca WiFi ESP32
+#include <PubSubClient.h> // Biblioteca MQTT
+#include <WiFiClientSecure.h>
 
 // Definições dos pinos
 #define DHTPIN 13
@@ -14,6 +23,7 @@
 #define IRRIGACAO_ATIVA HIGH
 #define IRRIGACAO_INATIVA LOW
 
+<<<<<<< HEAD
 // // Configurações da rede Wi-Fi (Wokwi)
 // const char *ssid = "Wokwi-GUEST";     // Nome da rede Wi-Fi do Wokwi
 // const char *password = "";           // Senha da rede Wi-Fi do Wokwi
@@ -25,53 +35,214 @@
 // Variáveis globais
 // WiFiClient client;
 LiquidCrystal_I2C lcd(0x27, 16, 2);
+=======
+// Variáveis globais
+LiquidCrystal_I2C lcd(0x27, 20, 4);
+>>>>>>> a82f369e5d73795d4996551198ba40d078a69f7b
 DHT dht(DHTPIN, DHTTYPE);
 int potassioPresente = 0;
 int fosforoPresente = 0;
 int leituraLDR_inicial = 0;
 float pH = 7.0;
-float pH_display = 7.0;
+float pH_display = 0;
 float temperatura_display = 0.0;
 float humidity_display = 0.0;
 bool leituraRealizada = false;
 unsigned long lastReadTime = 0;
 const unsigned long readInterval = 2000;
+bool irrigacao_inicial = false;
 
 // Calibração do sensor de pH (LDR) - Ajuste esses valores conforme seu LDR no Wokwi
 const int ldrMin = 100; // Valor LDR em alta luminosidade (pH alto/baixo) - Ajuste!
 const int ldrMax = 900; // Valor LDR em baixa luminosidade (pH baixo/alto) - Ajuste!
 
+// Configurações da rede Wi-Fi
+const char *ssid = "Wokwi-GUEST";
+const char *password = "";
+
+const char *mqtt_server = "broker.hivemq.com";
+const int mqtt_port = 1883;
+
+// Tópicos MQTT para publicação
+const char *topic_temp = "solo/temperatura";
+const char *topic_umid = "solo/umidade";
+const char *topic_ph = "solo/ph";
+const char *topic_ph_cat = "solo/ph/categoria";
+const char *topic_potassio = "solo/nutrientes/potassio";
+const char *topic_fosforo = "solo/nutrientes/fosforo";
+const char *topic_irrigacao = "solo/irrigacao/status";
+
+const char *server_ip = "192.168.1.43"; // Altere para o IP do seu PC
+const uint16_t server_port = 12345;
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+typedef struct DadosSensor
+{
+  float temperatura;
+  float umidade;
+  int leitura;
+  float ph;
+  int potassio;
+  int fosforo;
+  char irrigacao;
+} DadosSensor;
+
+DadosSensor dadosSensor;
+
 // Funções auxiliares
-float mapearPH(int ldrValue) {
+float mapearPH(int ldrValue)
+{
   return map(ldrValue, ldrMax, ldrMin, 0, 14);
 }
 
-String categorizarPH(float phValue) {
-  if (phValue < 6.5) {
+String categorizarPH(float phValue)
+{
+  if (phValue < 6.5)
+  {
     return "Acido";
-  } else if (phValue > 7.5) {
+  }
+  else if (phValue > 7.5)
+  {
     return "Alcalino";
-  } else {
+  }
+  else
+  {
     return "Neutro";
   }
 }
 
-void setup() {
-  // Inicializa a serial
+void setup_wifi()
+{
+  delay(10);
+  Serial.println("Conectando ao WiFi...");
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWiFi conectado!");
+  Serial.println(WiFi.localIP());
+}
+
+void callback(char *topic, byte *payload, unsigned int length)
+{
+  Serial.print("Mensagem recebida em ");
+  Serial.print(topic);
+  Serial.print(": ");
+  for (int i = 0; i < length; i++)
+  {
+    Serial.print((char)payload[i]);
+  }
+  Serial.println();
+}
+
+void reconnect()
+{
+  while (!client.connected())
+  {
+    Serial.print("Conectando no MQTT...");
+    if (client.connect("ESP32Client"))
+    {
+      Serial.println("conectado!");
+      if (client.connected())
+      {
+        char buffer[16];
+
+        // Temperatura
+        dtostrf(temperatura_display, 4, 1, buffer);
+        client.publish(topic_temp, buffer);
+
+        // Umidade
+        dtostrf(humidity_display, 4, 1, buffer);
+        client.publish(topic_umid, buffer);
+
+        // pH
+        dtostrf(pH_display, 4, 1, buffer);
+        client.publish(topic_ph, buffer);
+
+        // Categoria do pH
+        String categoriaPH = categorizarPH(pH_display);
+        client.publish(topic_ph_cat, categoriaPH.c_str());
+
+        // Nutrientes
+        client.publish(topic_potassio, potassioPresente ? "1" : "0");
+        client.publish(topic_fosforo, fosforoPresente ? "1" : "0");
+      }
+    }
+    else
+    {
+      Serial.print("falhou, rc=");
+      Serial.print(client.state());
+      Serial.println(" tentando novamente em 5 segundos");
+      delay(500);
+    }
+  }
+}
+
+void publicarDados()
+{
+  JsonDocument doc;
+  doc["temperatura"] = temperatura_display;
+  doc["umidade"] = humidity_display;
+  doc["pH"] = pH_display;
+  doc["potassio"] = potassioPresente;
+  doc["fosforo"] = fosforoPresente;
+  doc["irrigacao"] = digitalRead(RELE_PIN) == IRRIGACAO_ATIVA ? "ativa" : "inativa";
+
+  char buffer[256];
+  serializeJson(doc, buffer);
+
+  if (client.connected())
+  {
+    client.publish("sensor/solo/dados", buffer);
+  }
+}
+
+void enviarDadosPython(float temperatura, float umidade, int leitura_ldr, float ph, int potassio, int fosforo, String irrigacao)
+{
+  WiFiClient client;
+  if (client.connect(server_ip, server_port))
+  {
+    String json = "{";
+    json += "\"temperatura\":" + String(temperatura, 2) + ",";
+    json += "\"umidade\":" + String(umidade, 2) + ",";
+    json += "\"leitura_ldr\":" + String(leitura_ldr) + ",";
+    json += "\"ph\":" + String(ph, 2) + ",";
+    json += "\"potassio\":" + String(potassio ? "true" : "false") + ",";
+    json += "\"fosforo\":" + String(fosforo ? "true" : "false") + ",";
+    json += "\"irrigacao\":\"" + irrigacao + "\"";
+    json += "}";
+    client.println(json);
+    client.stop();
+    Serial.println("Dados enviados ao Python!");
+  }
+  else
+  {
+    Serial.println("Falha ao conectar ao servidor Python.");
+  }
+}
+
+void setup()
+{
   Serial.begin(115200);
-  delay(1000);
+  setup_wifi();
+  client.setServer(mqtt_server, mqtt_port);
+  client.setCallback(callback);
 
   // Inicializa o LCD
   dht.begin();
   lcd.init();
   lcd.backlight();
-  lcd.setCursor(2, 0);
+  lcd.setCursor(3, 1);
   lcd.print("HELLO EVERYONE!");
   delay(2000);
   lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Medidor de");
   lcd.setCursor(0, 1);
+  lcd.print("Medidor de");
+  lcd.setCursor(0, 2);
   lcd.print("Parametros Solo");
   delay(2000);
   lcd.clear();
@@ -84,8 +255,10 @@ void setup() {
   pinMode(PINO_FOSFORO, INPUT_PULLUP);
   pinMode(RELE_PIN, OUTPUT);
   digitalWrite(RELE_PIN, IRRIGACAO_INATIVA);
+
   lastReadTime = millis();
 
+<<<<<<< HEAD
   // // Conecta ao Wi-Fi
   // WiFi.begin(ssid, password);
   // while (WiFi.status() != WL_CONNECTED) {
@@ -111,28 +284,50 @@ void setup() {
   //   lcd.print("Erro de conexao");
   //   while (1); // Aguarda aqui
   // }
+=======
+  // Lê os dados dos sensores
+  float humidity = dht.readHumidity();
+  float temperature = dht.readTemperature();
 
-    // Lê os dados dos sensores
-    float humidity = dht.readHumidity();
-    float temperature = dht.readTemperature();
+  // Adiciona uma pequena variação aos valores
+  float humidity_variation = random(-10, 10) / 10.0;
+  float temperature_variation = random(-5, 5) / 10.0;
+  float temperature_display = temperature + temperature_variation;
+  float humidity_display = humidity + humidity_variation;
+>>>>>>> a82f369e5d73795d4996551198ba40d078a69f7b
 
-    // Adiciona uma pequena variação aos valores
-    float humidity_variation = random(-10, 10) / 10.0;
-    float temperature_variation = random(-5, 5) / 10.0;
-    float temperature_display = temperature + temperature_variation;
-    float humidity_display = humidity + humidity_variation;
+  // Atualiza o estado dos nutrientes
+  potassioPresente = (digitalRead(PINO_POTASSIO) == LOW) ? 1 : 0;
+  fosforoPresente = (digitalRead(PINO_FOSFORO) == LOW) ? 1 : 0;
 
-    // Lê o valor de pH
-    leituraLDR_inicial = analogRead(LIGHT_SENSOR_PIN);
-    pH = mapearPH(leituraLDR_inicial);
-    float pH_variation = random(-20, 20) / 10.0;
-    pH_display = constrain(pH + pH_variation, 0.0, 14.0);
-    String categoriaPH_atual = categorizarPH(pH_display);
+  // Lê o valor de pH
+  leituraLDR_inicial = analogRead(LIGHT_SENSOR_PIN);
+  pH = mapearPH(leituraLDR_inicial);
+  float pH_variation = random(-20, 20) / 10.0;
+  pH_display = constrain(pH + pH_variation, 0.0, 14.0);
+  String categoriaPH_atual = categorizarPH(pH_display);
 
-    // Atualiza o estado dos nutrientes
-    potassioPresente = (digitalRead(PINO_POTASSIO) == LOW) ? 1 : 0;
-    fosforoPresente = (digitalRead(PINO_FOSFORO) == LOW) ? 1 : 0;
+  String categoriaPH_inicial = categorizarPH(pH_display);
 
+  // Apresentação dos resultados no monitor serial
+  Serial.begin(115200);
+  Serial.println("\n--- Leitura Inicial dos Sensores ---");
+  Serial.print("Temperatura: ");
+  Serial.print(temperature_display, 1);
+  Serial.println(" C");
+  Serial.print("Umidade: ");
+  Serial.print(humidity_display, 1);
+  Serial.println(" %");
+  Serial.print("Leitura LDR: ");
+  Serial.print(leituraLDR_inicial);
+  Serial.print(" | pH: ");
+  Serial.print(pH_display, 1);
+  Serial.print(" (");
+  Serial.print(categoriaPH_inicial);
+  Serial.println(")");
+  Serial.println("--------------------------");
+
+<<<<<<< HEAD
     String categoriaPH_inicial = categorizarPH(pH_display);
 
 
@@ -171,48 +366,53 @@ void setup() {
     // client.println(jsonBuffer);
     // Serial.println("Dados JSON enviados:");
     // Serial.println(jsonBuffer);
+=======
+  // Exibe os dados no LCD
+  lcd.clear();
+  lcd.setCursor(2, 0);
+  lcd.print("Temperatura:");
+  lcd.print(temperature_display);
+  lcd.setCursor(2, 1);
+  lcd.print("Umidade:");
+  lcd.print(humidity_display);
+  lcd.print("%");
+  lcd.setCursor(2, 2);
+  lcd.print("pH:");
+  lcd.print(pH_display);
+  lcd.setCursor(2, 3);
+  lcd.print("Irrigacao:");
+  lcd.print(irrigacao_inicial ? " ON" : " OFF"); // Indica o status da irrigação no LCD
+  delay(3000);
+  lcd.clear();
+>>>>>>> a82f369e5d73795d4996551198ba40d078a69f7b
 
-    // Exibe os dados no LCD
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("T:");
-    lcd.print(temperature_display, 1);
-    lcd.print("C U:");
-    lcd.print(humidity_display, 1);
-    lcd.print("%");
-    lcd.setCursor(0, 1);
-    lcd.print("pH:");
-    lcd.print(pH_display, 1);
-    lcd.print(" OFF"); //Começa com a irrigação OFF
+  publicarDados();
 }
 
-void loop() {
+void loop()
+{
   // Lê o estado dos botões
   int leituraBotaoP = digitalRead(PINO_POTASSIO);
   int leituraBotaoF = digitalRead(PINO_FOSFORO);
 
   // Lógica de controle da irrigação
   bool irrigar = false;
-  if (humidity_display < 40.0 || pH_display < 6.0 || pH_display > 8.0 || potassioPresente == 0 || fosforoPresente == 0) {
+  // Irriga se a umidade for baixa
+  if (humidity_display < 40.0)
+  {
     irrigar = true;
-  } else if (humidity_display > 60.0 && pH_display >= 6.5 && pH_display <= 7.5 && potassioPresente == 1 && fosforoPresente == 1) {
+  }
+  // Interrompe a irrigação se a umidade estiver em uma faixa segura
+  else if (humidity_display > 55.0)
+  {
     irrigar = false;
   }
-
   // Controla o relé
   digitalWrite(RELE_PIN, irrigar ? IRRIGACAO_ATIVA : IRRIGACAO_INATIVA);
 
-  if (leituraBotaoP == LOW || leituraBotaoF == LOW) {
+  if (leituraBotaoP == LOW || leituraBotaoF == LOW)
+  {
     leituraRealizada = true;
-    // Lê os dados dos sensores
-    float humidity = dht.readHumidity();
-    float temperature = dht.readTemperature();
-
-    // Adiciona uma pequena variação aos valores
-    float humidity_variation = random(-10, 10) / 10.0;
-    float temperature_variation = random(-5, 5) / 10.0;
-    float temperature_display = temperature + temperature_variation;
-    float humidity_display = humidity + humidity_variation;
 
     // Lê o valor de pH
     leituraLDR_inicial = analogRead(LIGHT_SENSOR_PIN);
@@ -220,10 +420,11 @@ void loop() {
     float pH_variation = random(-20, 20) / 10.0;
     pH_display = constrain(pH + pH_variation, 0.0, 14.0);
     String categoriaPH_atual = categorizarPH(pH_display);
-    
+
     potassioPresente = (leituraBotaoP == LOW) ? 1 : 0;
     fosforoPresente = (leituraBotaoF == LOW) ? 1 : 0;
 
+<<<<<<< HEAD
  
 
     // // Cria um objeto JSON para enviar os dados
@@ -243,6 +444,8 @@ void loop() {
     // Serial.println("Dados JSON enviados:");
     // Serial.println(jsonBuffer);
 
+=======
+>>>>>>> a82f369e5d73795d4996551198ba40d078a69f7b
     Serial.println("\n--- Leitura dos Sensores ---");
     Serial.print("pH: ");
     Serial.print(pH_display, 1);
@@ -258,27 +461,60 @@ void loop() {
 
     // Exibe os dados no LCD
     lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("T:");
-    lcd.print(temperature_display, 1);
-    lcd.print("C U:");
-    lcd.print(humidity_display, 1);
-    lcd.print("%");
-    lcd.setCursor(0, 1);
-    lcd.print("pH:");
-    lcd.print(pH_display, 1);
+    lcd.setCursor(3, 0);
+    lcd.print("Potassio:");
+    lcd.print(potassioPresente ? "Sim" : "Não");
+    lcd.setCursor(3, 1);
+    lcd.print("Fosforo:");
+    lcd.print(fosforoPresente ? "Sim" : "Não");
+    lcd.setCursor(3, 2);
+    lcd.print("Irrigacao:");
     lcd.print(irrigar ? " ON" : " OFF"); // Indica o status da irrigação no LCD
-    delay(1000);
-  } else if (leituraRealizada) {
-    // Mantém a última leitura no LCD
-    lcd.setCursor(0, 1);
-    lcd.print(" (");
-    lcd.print(categorizarPH(pH_display));
-    lcd.print(")");
-    lcd.print(irrigar ? " ON" : " OFF"); // Indica o status da irrigação no LCD
-    delay(200);
-  } else {
-    // Mantém a tela inicial
-    delay(200);
+    delay(900);
+    lcd.clear();
+
+    publicarDados();
+    enviarDadosPython(
+        temperatura_display,
+        humidity_display,
+        leituraLDR_inicial,
+        pH_display,
+        potassioPresente,
+        fosforoPresente,
+        digitalRead(RELE_PIN) == IRRIGACAO_ATIVA ? "ATIVA" : "INATIVA");
+
+    if (!client.connected())
+    {
+      reconnect();
+    }
+    client.loop();
+
+    if (client.connected())
+    {
+    }
+    delay(100);
   }
+  else if (leituraRealizada)
+  {
+    // Mantém a última leitura no LCD
+    lcd.clear();
+    lcd.setCursor(3, 0);
+    lcd.print("Potassio:");
+    lcd.print(potassioPresente ? "Sim" : "Nao");
+    lcd.setCursor(3, 1);
+    lcd.print("Fosforo:");
+    lcd.print(fosforoPresente ? "Sim" : "Nao");
+    lcd.setCursor(3, 2);
+    lcd.print("Irrigacao:");
+    lcd.print(irrigar ? " ON" : " OFF");
+    delay(1000);
+    lcd.clear();
+  }
+  else
+  {
+    lcd.setCursor(0, 2);
+    lcd.print("Aguardando leitura.."); // Indica o status da irrigação no LCD
+  }
+
+  delay(200);
 }

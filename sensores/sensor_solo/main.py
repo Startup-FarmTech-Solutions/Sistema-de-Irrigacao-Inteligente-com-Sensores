@@ -1,10 +1,11 @@
 import socket
 import json
 import random
+import os
 
 # Configurações do servidor
-HOST = '127.0.0.1'  # Endereço IP do computador (localhost)
-PORT = 12345        # Porta para a comunicação
+HOST = '192.168.1.43'  # Endereço IP do computador (localhost)
+PORT = 12345           # Porta para a comunicação
 BUFFER_SIZE = 1024
 
 # Banco de dados SQL simulado em Python (dicionário)
@@ -49,18 +50,41 @@ def deletar_leitura(id):
         print("ID de leitura inválido.")
 
 # Função para salvar os dados em um arquivo JSON
-def salvar_dados_json(dados):
+def salvar_console_print_json(dados):
     try:
-        with open("dados_sensores.json", 'w') as f:
-            json.dump(dados, f, indent=4, ensure_ascii=False)
-        print("Dados salvos em dados_sensores.json")
+        os.makedirs("data", exist_ok=True)
+        caminho = "data/console_print.json"
+        # Tenta ler o arquivo existente
+        if os.path.exists(caminho):
+            with open(caminho, 'r', encoding='utf-8') as f:
+                estrutura = json.load(f)
+            # Garante que existe a chave "data" como lista
+            if "data" not in estrutura or not isinstance(estrutura["data"], list):
+                estrutura["data"] = []
+        else:
+            estrutura = {"data": []}
+
+        # Adiciona a nova leitura
+        estrutura["data"].append({
+            "temperatura": dados.get("temperatura", 0.0),
+            "umidade": dados.get("umidade", 0.0),
+            "leitura_ldr": dados.get("leitura_ldr", 0),
+            "ph": dados.get("ph", 0.0),
+            "potassio": dados.get("potassio", False),
+            "fosforo": dados.get("fosforo", False),
+            "irrigacao": dados.get("irrigacao", "")
+        })
+
+        # Salva de volta
+        with open(caminho, 'w', encoding='utf-8') as f:
+            json.dump(estrutura, f, indent=4, ensure_ascii=False)
+        print("Dados salvos em data/console_print.json")
     except Exception as e:
         print(f"Erro ao salvar dados em JSON: {e}")
 
 # Função principal para receber dados do ESP32 e processá-los
 def main():
     global potassio_atual, fosforo_atual
-    dados_sensores = []
 
     # Cria o socket do servidor
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -70,82 +94,79 @@ def main():
     print(f"Servidor aguardando conexão em {HOST}:{PORT}...")
 
     try:
-        # Aceita a conexão do ESP32
-        client_socket, client_address = server_socket.accept()
-        print(f"Conexão estabelecida com {client_address}")
-
         while True:
-            # Recebe os dados do ESP32
-            data = client_socket.recv(BUFFER_SIZE)
-            if not data:
-                print("Conexão encerrada pelo cliente.")
-                break
+            # Aceita a conexão do ESP32
+            client_socket, client_address = server_socket.accept()
+            print(f"Conexão estabelecida com {client_address}")
+            with client_socket:
+                data = client_socket.recv(BUFFER_SIZE)
+                if not data:
+                    print("Conexão encerrada pelo cliente.")
+                    continue
 
-            # Decodifica os dados recebidos
-            mensagem = data.decode('utf-8').strip()
-            print(f"Mensagem recebida: {mensagem}")
+                mensagem = data.decode('utf-8').strip()
+                if not mensagem:
+                    print("Mensagem vazia recebida.")
+                    continue
+                print(f"Mensagem recebida: {mensagem}")
 
-            try:
-                # Carrega os dados JSON
-                leitura = json.loads(mensagem)
-                dados_sensores.append(leitura)
+                try:
+                    # Carrega os dados JSON
+                    leitura = json.loads(mensagem)
+                    adicionar_leitura(leitura)
 
-                # Adiciona a leitura ao banco de dados simulado
-                adicionar_leitura(leitura)
+                    # Imprime os dados recebidos
+                    print("\nDados Recebidos do ESP32:")
+                    print(json.dumps(leitura, indent=4, ensure_ascii=False))
 
-                # Imprime os dados recebidos
-                print("\nDados Recebidos do ESP32:")
-                print(json.dumps(leitura, indent=4, ensure_ascii=False))
+                    # Simula o acionamento dos botões de potássio e fósforo
+                    if leitura['potassio'] == 1:
+                        potassio_adicionado = random.uniform(0.1, 0.5)
+                        potassio_atual += potassio_adicionado
+                        print(f"Potássio adicionado: {potassio_adicionado:.2f} g. Potássio atual: {potassio_atual:.2f} g")
 
-                # Simula o acionamento dos botões de potássio e fósforo
-                if leitura['potassio'] == 1:
-                    potassio_adicionado = random.uniform(0.1, 0.5)
-                    potassio_atual += potassio_adicionado
-                    print(f"Potássio adicionado: {potassio_adicionado:.2f} g. Potássio atual: {potassio_atual:.2f} g")
+                    if leitura['fosforo'] == 1:
+                        fosforo_adicionado = random.uniform(0.2, 0.6)
+                        fosforo_atual += fosforo_adicionado
+                        print(f"Fósforo adicionado: {fosforo_adicionado:.2f} g. Fósforo atual: {fosforo_atual:.2f} g")
 
-                if leitura['fosforo'] == 1:
-                    fosforo_adicionado = random.uniform(0.2, 0.6)
-                    fosforo_atual += fosforo_adicionado
-                    print(f"Fósforo adicionado: {fosforo_adicionado:.2f} g. Fósforo atual: {fosforo_atual:.2f} g")
+                    # Demonstração das operações CRUD
+                    print("\n--- Operações CRUD no Banco de Dados Simulado ---")
+                    print("Todas as Leituras:", obter_leituras())
+                    if database["leituras"]:
+                        primeira_leitura = obter_leitura_por_id(0)
+                        print("Primeira Leitura:", primeira_leitura)
 
-                # Demonstração das operações CRUD
-                print("\n--- Operações CRUD no Banco de Dados Simulado ---")
-                print("Todas as Leituras:", obter_leituras())
-                if database["leituras"]:
-                    primeira_leitura = obter_leitura_por_id(0)
-                    print("Primeira Leitura:", primeira_leitura)
-                    
-                    # Cria uma nova leitura para atualizar
-                    nova_leitura = {
-                        "temperatura": 28.5,
-                        "umidade": 72.0,
-                        "pH": 6.8,
-                        "categoria_pH": "Neutro",
-                        "potassio": 0,
-                        "fosforo": 0,
-                        "irrigacao": False
-                    }
-                    atualizar_leitura(0, nova_leitura)
-                    print("Leitura Atualizada:", obter_leitura_por_id(0))
-                    
-                    deletar_leitura(len(database["leituras"]) -1)
-                    print("Leitura Deletada. Leituras Restantes:", obter_leituras())
-                else:
-                    print("Banco de dados está vazio")
+                        # Cria uma nova leitura para atualizar
+                        nova_leitura = {
+                            "temperatura": 28.5,
+                            "umidade": 72.0,
+                            "pH": 6.8,
+                            "categoria_pH": "Neutro",
+                            "potassio": 0,
+                            "fosforo": 0,
+                            "irrigacao": False
+                        }
+                        atualizar_leitura(0, nova_leitura)
+                        print("Leitura Atualizada:", obter_leitura_por_id(0))
+                       
+                        deletar_leitura(len(database["leituras"]) - 1)
+                        print("Leitura Deletada. Leituras Restantes:", obter_leituras())
+                    else:
+                        print("Banco de dados está vazio")
 
-                # Salva os dados em um arquivo JSON
-                salvar_dados_json(dados_sensores)
-                dados_sensores = []
+                    # Salva os dados em um arquivo JSON
+                    salvar_console_print_json(leitura)
 
-                # Envia uma resposta de volta para o cliente (ESP32)
-                client_socket.send("Dados recebidos com sucesso!".encode('utf-8'))
+                    # Envia uma resposta de volta para o cliente (ESP32)
+                    client_socket.send("Dados recebidos com sucesso!".encode('utf-8'))
 
-            except json.JSONDecodeError:
-                print(f"Erro ao decodificar JSON: {mensagem}")
-                client_socket.send("Erro ao decodificar JSON!".encode('utf-8'))
-            except Exception as e:
-                print(f"Erro inesperado: {e}")
-                client_socket.send(f"Erro no servidor: {e}".encode('utf-8'))
+                except json.JSONDecodeError:
+                    print(f"Erro ao decodificar JSON: {mensagem}")
+                    client_socket.send("Erro ao decodificar JSON!".encode('utf-8'))
+                except Exception as e:
+                    print(f"Erro inesperado: {e}")
+                    client_socket.send(f"Erro no servidor: {e}".encode('utf-8'))
 
     except Exception as e:
         print(f"Erro ao iniciar o servidor: {e}")
