@@ -1,0 +1,27 @@
+# Ignora o ambiente virtual (nome mais comum)
+.venv/
+env/
+
+# Cache do pip
+pip-selfcheck.json
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+
+# Arquivos gerados por instalação de pacotes
+*.egg-info/
+*.egg
+*.whl
+dist/
+build/
+
+# Arquivos do sistema/mac
+.DS_Store
+
+# Arquivos de configuração temporários
+*.log
+*.tmp
+
+# Arquivos secretos
+*.env

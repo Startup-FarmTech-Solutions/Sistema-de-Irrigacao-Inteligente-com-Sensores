@@ -16,3 +16,4 @@ if __name__ == "__main__":
     # CulturaController().get_culturas(connection)
     # SensorController().create_sensor()
     AreaPlantioController().create_area_plantio()
+    app.run(debug=True)

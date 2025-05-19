@@ -1,7 +1,7 @@
 {
     "data": [
         {
-            "temperatura": 0.0,
+            "temperatura": 10.0,
             "umidade": 0.0,
             "leitura_ldr": 1831,
             "ph": 0.0,
@@ -10,7 +10,7 @@
             "irrigacao": "ATIVA"
         },
         {
-            "temperatura": 0.0,
+            "temperatura": 30.0,
             "umidade": 0.0,
             "leitura_ldr": 2744,
             "ph": 0.0,
