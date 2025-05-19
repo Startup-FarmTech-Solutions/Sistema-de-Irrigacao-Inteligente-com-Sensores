@@ -7,6 +7,7 @@ from connection.connection_db import ConnectionDB
 from controller.area_plantio_controller import AreaPlantioController
 from controller.cultura_controller import CulturaController
 from controller.sensor_controller import SensorController
+from dashboard.app import main
 
 if __name__ == "__main__":
     connection = ConnectionDB()
@@ -15,5 +16,5 @@ if __name__ == "__main__":
     # CulturaController().menu_cultura()
     # CulturaController().get_culturas(connection)
     # SensorController().create_sensor()
+    main()
     AreaPlantioController().create_area_plantio()
-    app.run(debug=True)
