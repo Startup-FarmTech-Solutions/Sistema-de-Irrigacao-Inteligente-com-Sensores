@@ -1,114 +1,102 @@
 # Classe modelo do Leitura do Sensor
-from datetime import datetime as Datetime
+from datetime import date as Date
 
 class LeituraSensorModel:
-    def __init__(self,
-                 id_leitura_sensor:int=None,
-                 id_sensor:int=None,
-                 id_area_plantio:int=None,
-                 data_hora:str=Datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                 temperatura:float=None,
-                 umidade:float=None,
-                 fosforo:float=None,
-                 potassio:float=None,
-                 ph:float=None
-                 ):
-        self.set_id_leitura_senso(id_leitura_sensor)
-        self.set_sensor_id(id_sensor)
-        self.set_area_plantio_id(id_area_plantio)
-        self.set_data_hora(data_hora)
-        self.set_temperatura(temperatura)
-        self.set_umidade(umidade)
-        self.set_fosforo(fosforo)
-        self.set_potassio(potassio)
-        self.set_ph(ph)
-
+    def __init__(
+            self,
+            id_leitura_sensor: int = None,
+            id_sensor: int = None,
+            id_area_plantio: int = None,
+            data_hora: str = Date.today,
+            temperatura: float = None,
+            umidade: float = None,
+            leitura_ldr: int = None,
+            ph: float = None,
+            potassio: float = None,  
+            fosforo: float = None,  
+            irrigacao: chr = None
+    ):
+        self.id_leitura_sensor = id_leitura_sensor
+        self.id_sensor = id_sensor
+        self.id_area_plantio = id_area_plantio
+        self.data_hora = data_hora
+        self.temperatura = temperatura
+        self.umidade = umidade
+        self.leitura_ldr = leitura_ldr
+        self.ph = ph
+        self.potassio = potassio
+        self.fosforo = fosforo
+        self.irrigacao = irrigacao
 
     # Getters e Setters
     def get_id_leitura_sensor(self) -> int:
         return self.id_leitura_sensor
-    
-    def set_id_leitura_sensor(self, id_leitura_sensor:int):
-        if id_leitura_sensor is not None:
-            self.id_leitura_sensor = id_leitura_sensor
-        else:
-            raise ValueError("id_leitura_sensor não pode ser None")
-        
+
+    def set_id_leitura_sensor(self, id_leitura_sensor: int):
+        self.id_leitura_sensor = id_leitura_sensor
+
     def get_id_sensor(self) -> int:
         return self.id_sensor
-    
-    def set_id_sensor(self, id_sensor:int):
-        if id_sensor is not None:
-            self.id_sensor = id_sensor
-        else:
-            raise ValueError("id_sensor não pode ser None")
-        
+
+    def set_id_sensor(self, id_sensor: int):
+        self.id_sensor = id_sensor
+
     def get_id_area_plantio(self) -> int:
         return self.id_area_plantio
-    
-    def set_id_area_plantio(self, id_area_plantio:int):
-        if id_area_plantio is not None:
-            self.id_area_plantio = id_area_plantio
-        else:
-            raise ValueError("id_area_plantio não pode ser None")
-        
-    def get_data_hora(self) -> Datetime:
+
+    def set_id_area_plantio(self, id_area_plantio: int):
+        self.id_area_plantio = id_area_plantio
+
+    def get_data_hora(self) -> Date:
         return self.data_hora
-    
-    def set_data_hora(self, data_hora:Datetime):
-        if data_hora is not None:
-            self.data_hora = data_hora
-        else:
-            raise ValueError("data_hora não pode ser None")
-        
+
+    def set_data_hora(self, data_hora: Date):
+        self.data_hora = data_hora
+
     def get_temperatura(self) -> float:
         return self.temperatura
-    
-    def set_temperatura(self, temperatura:float):
-        if temperatura is not None:
-            self.temperatura = temperatura
-        else:
-            raise ValueError("temperatura não pode ser None")
-        
+
+    def set_temperatura(self, temperatura: float):
+        self.temperatura = temperatura
+
     def get_umidade(self) -> float:
         return self.umidade
-    
-    def set_umidade(self, umidade:float):
-        if umidade is not None:
-            self.umidade = umidade
-        else:
-            raise ValueError("umidade não pode ser None")
-        
-    def get_fosforo(self) -> float:
-        return self.fosforo
-    
-    def set_fosforo(self, fosforo:float):
-        if fosforo is not None:
-            self.fosforo = fosforo
-        else:
-            raise ValueError("fosforo não pode ser None")
-        
-    def get_potassio(self) -> float:
-        return self.potassio
-    
-    def set_potassio(self, potassio:float):
-        if potassio is not None:
-            self.potassio = potassio
-        else:
-            raise ValueError("potassio não pode ser None")
-        
+
+    def set_umidade(self, umidade: float):
+        self.umidade = umidade
+
+    def get_leitura_ldr(self) -> int:
+        return self.leitura_ldr
+
+    def set_leitura_ldr(self, leitura_ldr: int):
+        self.leitura_ldr = leitura_ldr
+
     def get_ph(self) -> float:
         return self.ph
-    
-    def set_ph(self, ph:float):
-        if ph is not None:
-            self.ph = ph
-        else:
-            raise ValueError("ph não pode ser None")
-        
-    def __str__(self):
-        return f"LeituraSensorModel(id_leitura_sensor={self.id_leitura_sensor}, id_sensor={self.id_sensor}, id_area_plantio={self.id_area_plantio}, data_hora={self.data_hora}, temperatura={self.temperatura}, umidade={self.umidade}, fosforo={self.fosforo}, potassio={self.potassio}, ph={self.ph})"
-    
-    
 
-        
+    def set_ph(self, ph: float):
+        self.ph = ph
+
+    def get_potassio(self) -> float: 
+        return self.potassio
+
+    def set_potassio(self, potassio: float):
+        self.potassio = potassio
+
+    def get_fosforo(self) -> float: 
+        return self.fosforo
+
+    def set_fosforo(self, fosforo: float):
+        self.fosforo = fosforo
+
+    def get_irrigacao(self) -> str:
+        return self.irrigacao
+
+    def set_irrigacao(self, irrigacao: str):
+        self.irrigacao = irrigacao
+
+    def __str__(self):
+        return (f"LeituraSensorModel(id_leitura_sensor={self.id_leitura_sensor}, id_sensor={self.id_sensor}, "
+                f"id_area_plantio={self.id_area_plantio}, data_hora={self.data_hora}, temperatura={self.temperatura}, "
+                f"umidade={self.umidade}, leitura_ldr={self.leitura_ldr}, ph={self.ph}, potassio={self.potassio}, "
+                f"fosforo={self.fosforo}, irrigacao={self.irrigacao})")

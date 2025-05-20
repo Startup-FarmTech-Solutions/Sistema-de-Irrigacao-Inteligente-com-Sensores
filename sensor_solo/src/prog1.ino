@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-// #include <WiFi.h>
-// #include <WiFiClient.h>
-=======
->>>>>>> a82f369e5d73795d4996551198ba40d078a69f7b
 #include <ArduinoJson.h>
 #include <LiquidCrystal_I2C.h>
 #include <DHT.h>
@@ -23,22 +18,8 @@
 #define IRRIGACAO_ATIVA HIGH
 #define IRRIGACAO_INATIVA LOW
 
-<<<<<<< HEAD
-// // Configurações da rede Wi-Fi (Wokwi)
-// const char *ssid = "Wokwi-GUEST";     // Nome da rede Wi-Fi do Wokwi
-// const char *password = "";           // Senha da rede Wi-Fi do Wokwi
-
-// // Configurações do servidor Python
-// const char *serverHost = "127.0.0.1"; // Endereço IP do servidor (no Wokwi)
-// const int serverPort = 12345;         // Porta do servidor Python
-
-// Variáveis globais
-// WiFiClient client;
-LiquidCrystal_I2C lcd(0x27, 16, 2);
-=======
 // Variáveis globais
 LiquidCrystal_I2C lcd(0x27, 20, 4);
->>>>>>> a82f369e5d73795d4996551198ba40d078a69f7b
 DHT dht(DHTPIN, DHTTYPE);
 int potassioPresente = 0;
 int fosforoPresente = 0;
@@ -72,7 +53,7 @@ const char *topic_potassio = "solo/nutrientes/potassio";
 const char *topic_fosforo = "solo/nutrientes/fosforo";
 const char *topic_irrigacao = "solo/irrigacao/status";
 
-const char *server_ip = "192.168.1.43"; // Altere para o IP do seu PC
+const char *server_ip = "192.168.1.35"; // Altere para o IP do seu PC
 const uint16_t server_port = 12345;
 
 WiFiClient espClient;
@@ -258,33 +239,6 @@ void setup()
 
   lastReadTime = millis();
 
-<<<<<<< HEAD
-  // // Conecta ao Wi-Fi
-  // WiFi.begin(ssid, password);
-  // while (WiFi.status() != WL_CONNECTED) {
-  //   delay(500);
-  //   Serial.print(".");
-  // }
-  // Serial.println("");
-  // Serial.println("Conectado ao Wi-Fi");
-  // Serial.print("Endereço IP: ");
-  // Serial.println(WiFi.localIP());
-
-  // // Conecta ao servidor Python
-  // Serial.print("Conectando ao servidor Python em ");
-  // Serial.print(serverHost);
-  // Serial.print(":");
-  // Serial.println(serverPort);
-  // if (client.connect(serverHost, serverPort)) {
-  //   Serial.println("Conectado ao servidor Python");
-  // } else {
-  //   Serial.print("Falha ao conectar ao servidor Python. Status do WiFi: ");
-  //   Serial.println(WiFi.status());
-  //   lcd.clear();
-  //   lcd.print("Erro de conexao");
-  //   while (1); // Aguarda aqui
-  // }
-=======
   // Lê os dados dos sensores
   float humidity = dht.readHumidity();
   float temperature = dht.readTemperature();
@@ -294,7 +248,6 @@ void setup()
   float temperature_variation = random(-5, 5) / 10.0;
   float temperature_display = temperature + temperature_variation;
   float humidity_display = humidity + humidity_variation;
->>>>>>> a82f369e5d73795d4996551198ba40d078a69f7b
 
   // Atualiza o estado dos nutrientes
   potassioPresente = (digitalRead(PINO_POTASSIO) == LOW) ? 1 : 0;
@@ -327,46 +280,6 @@ void setup()
   Serial.println(")");
   Serial.println("--------------------------");
 
-<<<<<<< HEAD
-    String categoriaPH_inicial = categorizarPH(pH_display);
-
-
-
-    // Apresentação dos resultados no monitor serial
-    Serial.begin(115200);
-    Serial.println("\n--- Leitura Inicial dos Sensores ---");
-    Serial.print("Temperatura: ");
-    Serial.print(temperature_display, 1);
-    Serial.println(" C");
-    Serial.print("Umidade: ");
-    Serial.print(humidity_display, 1);
-    Serial.println(" %");
-    Serial.print("Leitura LDR: ");
-    Serial.print(leituraLDR_inicial);
-    Serial.print(" | pH: ");
-    Serial.print(pH_display, 1);
-    Serial.print(" (");
-    Serial.print(categoriaPH_inicial);
-    Serial.println(")");
-    Serial.println("--------------------------");
-
-    // // Cria um objeto JSON para enviar os dados
-    // StaticJsonDocument<256> doc;  // Ajuste o tamanho conforme necessário
-    // doc["temperatura"] = temperature_display;
-    // doc["umidade"] = humidity_display;
-    // doc["pH"] = pH_display;
-    // doc["categoria_pH"] = categoriaPH_atual;
-    // doc["potassio"] = potassioPresente;
-    // doc["fosforo"] = fosforoPresente;
-    // doc["irrigacao"] = false; // A irrigação começa desligada, certo?
-    
-    // // Envia os dados JSON para o servidor Python
-    // char jsonBuffer[256];
-    // serializeJson(doc, jsonBuffer);
-    // client.println(jsonBuffer);
-    // Serial.println("Dados JSON enviados:");
-    // Serial.println(jsonBuffer);
-=======
   // Exibe os dados no LCD
   lcd.clear();
   lcd.setCursor(2, 0);
@@ -384,7 +297,6 @@ void setup()
   lcd.print(irrigacao_inicial ? " ON" : " OFF"); // Indica o status da irrigação no LCD
   delay(3000);
   lcd.clear();
->>>>>>> a82f369e5d73795d4996551198ba40d078a69f7b
 
   publicarDados();
 }
@@ -424,28 +336,6 @@ void loop()
     potassioPresente = (leituraBotaoP == LOW) ? 1 : 0;
     fosforoPresente = (leituraBotaoF == LOW) ? 1 : 0;
 
-<<<<<<< HEAD
- 
-
-    // // Cria um objeto JSON para enviar os dados
-    // StaticJsonDocument<256> doc;  // Ajuste o tamanho conforme necessário
-    // doc["temperatura"] = temperature_display;
-    // doc["umidade"] = humidity_display;
-    // doc["pH"] = pH_display;
-    // doc["categoria_pH"] = categoriaPH_atual;
-    // doc["potassio"] = potassioPresente;
-    // doc["fosforo"] = fosforoPresente;
-    // doc["irrigacao"] = irrigar;
-
-    // // Envia os dados JSON para o servidor Python
-    // char jsonBuffer[256];
-    // serializeJson(doc, jsonBuffer);
-    // client.println(jsonBuffer); // Envia para o servidor Python
-    // Serial.println("Dados JSON enviados:");
-    // Serial.println(jsonBuffer);
-
-=======
->>>>>>> a82f369e5d73795d4996551198ba40d078a69f7b
     Serial.println("\n--- Leitura dos Sensores ---");
     Serial.print("pH: ");
     Serial.print(pH_display, 1);
