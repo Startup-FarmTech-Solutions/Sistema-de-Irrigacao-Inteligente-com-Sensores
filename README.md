@@ -86,6 +86,9 @@ A bomba de irrigação será ligada automaticamente quando:
 ### Sensor de Potássio
 <img src="assets/imagens_dos_circuitos/imagens/sensor_potassio.png" alt="Sensor de potássio" width="300">
 
+### sensor solo
+<img src="assets/imagens_dos_circuitos/imagens/sensor_solo.png" alt="Sensor solo" width="300">
+
 
 ---
 
