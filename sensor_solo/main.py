@@ -31,7 +31,11 @@ import socket
 import json
 import random
 import os
-from ..connection.connection_db import ConnectionDB
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from connection.connection_db import ConnectionDB
 from controller.leitura_sensor_controller import LeituraSensorController
 
 
