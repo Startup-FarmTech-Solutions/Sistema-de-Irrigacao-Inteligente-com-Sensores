@@ -1,9 +1,0 @@
-{
-    "temperatura": 0.0,
-    "umidade": 0.0,
-    "leitura_ldr": 3688,
-    "ph": 0.0,
-    "potassio": false,
-    "fosforo": true,
-    "irrigacao": "ATIVA"
-}

@@ -12,10 +12,35 @@
 # 🌱 FarmTech Solutions - Sistema de Irrigação Inteligente
 ## 👨‍🎓 Integrantes: 
 - Vitor Eiji Fernandes Teruia
-- Beatriz Pilecarte de Melo 
-- Francismar Alves Martins Junior  
-- Antônio Ancelmo Neto barros  
-- Matheus Soares Bento da Silva 
+```
+- RM: rm563683
+- E-mail: vitorfer2018@gmail.com
+- GitHub: [@Vitor985-hub](https://github.com/Vitor985-hub)
+```
+- Beatriz Pilecarte de Melo
+```
+ - RM: rm564952
+ - E-mail: beatrizpilecartedemelo@gmail.com
+ - GitHub: [@BPilecarte](https://github.com/BPilecarte)
+```
+- Francismar Alves Martins Junior
+```
+ - RM: m562869
+ - E-mail: yggdrasil.git@gmail.com
+ - GitHub: [@yggdrasilGit](https://github.com/yggdrasilGit
+```
+- Antônio Ancelmo Neto barros
+```
+ - RM: rm563683
+ - E-mail: antonio.anbarros@gmail.com
+ - GitHub: [@AntonioBarros19](https://github.com/AntonioBarros19)
+```
+- Matheus Soares Bento da Silva
+```
+ - RM: rm565540
+ - E-mail: matheusbento044@gmail.com
+ - GitHub: [matheusbento044](https://github.com/matheusbento04)
+```
 
 ## 👩‍🏫 Professores:
 ### Tutor(a) 
@@ -61,6 +86,21 @@ Também há funcionalidades extras de visualização via dashboard e integraçã
 - O LED embutido no relé indica o status da bomba:
   - 💡 **Ligado** = irrigação ativa
   - ❌ **Desligado** = irrigação inativa
+ 
+## Integração com API Climática
+
+Este projeto utiliza a API pública do [OpenWeather](https://openweathermap.org/api) para obter dados climáticos em tempo real da cidade de São Paulo.
+
+### Como funciona:
+
+- A API retorna informações como temperatura, condição do tempo (ex: "chuva leve") e volume de chuva recente.
+- O script em Python analisa esses dados e decide se a irrigação será ativada ou não.
+- Lógica utilizada:
+  - **Se houver previsão de chuva ou chuva recente**, **não irrigar**.
+  - **Se estiver acima de 30 °C e sem chuva**, **irrigar**.
+  - **Caso contrário**, irrigar normalmente, desde que não haja chuva.
+
+A integração é feita com a biblioteca `requests`, e a chave da API deve ser obtida gratuitamente no site oficial.
 
 ---
 
@@ -86,86 +126,103 @@ A bomba de irrigação será ligada automaticamente quando:
 ### Sensor de Potássio
 <img src="assets/imagens_dos_circuitos/imagens/sensor_potassio.png" alt="Sensor de potássio" width="300">
 
+### sensor solo
+<img src="assets/imagens_dos_circuitos/imagens/sensor_solo.png" alt="Sensor solo" width="300">
+
 
 ---
 
 
 ## 📁 Estrutura de pastas
 ```
-Sistema-de-Irrigacao-Inteligente-com-Sensores
-├── pycache/ # Arquivos compilados automaticamente pelo Python
-├── .vscode/ # Configurações do Visual Studio Code
-├── imagens_dos_circuitos/ # Imagens utilizadas na documentação ou no projeto
-├── sensor_fosforo/ # Código relacionado ao sensor de fósforo
-├── sensor_ph/ # Código relacionado ao sensor de pH
-├── sensor_potassio/ # Código relacionado ao sensor de potássio
-├── sensor_umidade/ # Código relacionado ao sensor de umidade do solo
-├── main.py # Script principal do sistema
-└── README.md # Documentação do projeto
+├── 📁 arduino/                  # Códigos para o ESP32 (Wokwi)
+│   └── main.ino                # Código principal do ESP32 (simulação dos sensores e lógica)
+│
+├── 📁 python/                   # Integração Python com banco de dados e APIs
+│   ├── db/                     
+│   │   ├── database.py         # Script para conectar ao banco SQL (SQLite, MySQL etc.)
+│   │   └── models.py           # Estrutura das tabelas e queries SQL
+│   ├── sensors/                
+│   │   └── receiver.py         # Script que recebe e processa dados do ESP32
+│   ├── climate/                
+│   │   └── api_client.py       # (Opcional) Cliente para obter dados climáticos de API externa
+│   └── main.py                 # Script principal Python que integra tudo
+│
+├── 📁 docs/                     # Documentação do projeto
+│   └── relatorio.pdf           # Relatório do projeto (ou README.md)
+│
+├── 📁 dashboard/               # (Opcional) Interface para visualização de dados
+│   └── app.py                  # Código para o dashboard (Flask, Streamlit etc.)
+│
+├── 📁 wokwi-project/           # Arquivos de simulação do Wokwi
+│   └── diagram.json            # Arquivo de configuração do circuito na Wokwi
+│
+└── requirements.txt            # Dependências Python
+```
+💾 Instalação
+
+1. clone o repositório:
+```
+https://github.com/Startup-FarmTech-Solutions/Sistema-de-Irrigacao-Inteligente-com-Sensores.git
+```
+2. Crie e ative um ambiente virtual (opcional, mas recomendado):
+```
+python -m venv venv
+source venv/bin/activate      # Linux/macOS
+venv\Scripts\activate         # Windows
+```
+3. Instale as bibliotecas necessárias:
+```
+pip install -r requirements.txt
 ```
 ## 🔧 Como executar o código
+1. 📟 Simulação no Wokwi
+   
+ 1. Acesse https://wokwi.com/
 
-1. clone o repositório
-```bash
-git clone https://github.com/seuusuario/Sistema-de-Irrigacao-Inteligente-com-Sensores.git
-cd Sistema-de-Irrigacao-Inteligente-com-Sensores
+   2. Importe o arquivo diagram.json da pasta wokwi-project/
+
+   3. Carregue o código main.ino da pasta arduino/
+
+   4. Inicie a simulação clicando em "Start Simulation"
+
+   5. Observe os dados dos sensores sendo exibidos no console da simulação (ou simulador serial)
+
+2. 🐍 Execução do Código Python
+
+   1.Acesse a pasta python/:
+   ```
+   cd python
+   ```
+
+   2.Execute o script principal:
+   ```
+   python main.py
+   ```
+   Esse script:
+
+   .Conecta ao banco de dados
+
+   .Recebe dados dos sensores simulados
+
+   .Armazena os dados e toma decisões de irrigação
+
+.Consulta API climática
+
+3. 📊 Rodar o Dashboard
+Se estiver usando uma interface com Streamlit ou Flask:
 ```
-
-2. Crie um ambiente virtual
-```bash
-python -m venv venv
-source venv/bin/activate  # No Windows use: venv\Scripts\activate
+cd ../dashboard
+streamlit run app.py
 ```
-3. Instale as dependências:
-```bash
-pip install fastapi uvicorn
-```
-4. Execute o servidor FastAPI:
-```bash
-uvicorn main:app --reload
-```
-5. Teste a API no navegador ou com uma ferramenta como Postman
-```
-Após rodar o comando:
+Acesse via navegador: http://localhost:8501
 
 
-uvicorn main:app --reload
-
-A aplicação estará disponível localmente em:
-
-arduino
-Copiar código
-http://localhost:8000
-Você pode testá-la de duas formas:
-
-🔹 No navegador:
-Acesse http://localhost:8000/docs
-Essa é uma documentação interativa gerada automaticamente, onde você pode testar o endpoint POST /sensor enviando um dado como:
-
-json
-Copiar código
-{
-  "presenca": true
-}
-🔹 Com o Postman ou curl:
-Envie uma requisição POST para:
-
-bash
-Copiar código
-http://localhost:8000/sensor
-Com o corpo da requisição (JSON):
-
-json
-Copiar código
-{
-  "presenca": true
-}
-```
 ## 🗃 Histórico de lançamentos
 
 * 0.1.0 - 14/05/2025
     *
-
+* 0.2.0 - 19/05/2025
 ## 📋 Licença
 
 <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/agodoi/template">MODELO GIT FIAP</a> por <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://fiap.com.br">Fiap</a> está licenciado sobre <a href="http://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">Attribution 4.0 International</a>.</p>
