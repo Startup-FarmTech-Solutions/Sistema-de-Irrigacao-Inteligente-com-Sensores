@@ -154,7 +154,7 @@ class ConnectionDB:
             raise Exception(f"Conexão '{conn_name}' não encontrada.")  # Lança exceção se a conexão não existir
         try:
             self.connections[conn_name].commit()
-            print(f"Transação da conexão '{conn_name}' confirmada.")
+            # print(f"Transação da conexão '{conn_name}' confirmada.")
         except oracledb.Error as e:
             print(f"Erro ao confirmar a transação da conexão '{conn_name}': {e}")
             raise  # Re-lança a exceção para tratamento adicional, se necessário

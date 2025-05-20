@@ -18,7 +18,6 @@ fosforo_atual = 0
 # Função para adicionar uma leitura ao banco de dados simulado
 def adicionar_leitura(leitura):
     database["leituras"].append(leitura)
-    print("Leitura adicionada ao banco de dados.")
 
 # Função para recuperar todas as leituras do banco de dados simulado
 def obter_leituras():
@@ -35,7 +34,6 @@ def obter_leitura_por_id(id):
 def atualizar_leitura(id, nova_leitura):
     if 0 <= id < len(database["leituras"]):
         database["leituras"][id] = nova_leitura
-        print("Leitura atualizada no banco de dados.")
     else:
         print("ID de leitura inválido.")
 
@@ -43,7 +41,6 @@ def atualizar_leitura(id, nova_leitura):
 def deletar_leitura(id):
     if 0 <= id < len(database["leituras"]):
         del database["leituras"][id]
-        print("Leitura deletada do banco de dados.")
     else:
         print("ID de leitura inválido.")
 
@@ -64,7 +61,6 @@ def salvar_console_print_json(dados):
         }
         with open(caminho, 'w', encoding='utf-8') as f:
             json.dump(estrutura, f, indent=4, ensure_ascii=False)
-        print("Dados salvos em data/console_print.json (sobrescrito)")
     except Exception as e:
         print(f"Erro ao salvar dados em JSON: {e}")
 
@@ -90,7 +86,6 @@ def main(host = '192.168.1.35', port = 12345):
         while True:
             # Aceita a conexão do ESP32
             client_socket, client_address = server_socket.accept()
-            print(f"Conexão estabelecida com {client_address}")
             with client_socket:
                 data = client_socket.recv(BUFFER_SIZE)
                 if not data:
@@ -98,41 +93,26 @@ def main(host = '192.168.1.35', port = 12345):
                     continue
 
                 mensagem = data.decode('utf-8').strip()
-                if not mensagem:
-                    print("Mensagem vazia recebida.")
-                    continue
-                print(f"Mensagem recebida: {mensagem}")
 
                 try:
                     # Carrega os dados JSON
                     leitura = json.loads(mensagem)
                     adicionar_leitura(leitura)
 
-                    # Imprime os dados recebidos
-                    print("\nDados Recebidos do ESP32:")
-                    print(json.dumps(leitura, indent=4, ensure_ascii=False))
-
                     # Simula o acionamento dos botões de potássio e fósforo
                     if leitura['potassio'] == 1:
                         potassio_adicionado = random.uniform(0.1, 0.5)
                         potassio_atual += potassio_adicionado
-                        print(f"Potássio adicionado: {potassio_adicionado:.2f} g. Potássio atual: {potassio_atual:.2f} g")
 
                     if leitura['fosforo'] == 1:
                         fosforo_adicionado = random.uniform(0.2, 0.6)
                         fosforo_atual += fosforo_adicionado
-                        print(f"Fósforo adicionado: {fosforo_adicionado:.2f} g. Fósforo atual: {fosforo_atual:.2f} g")
 
-                    # Demonstração das operações CRUD
-                    print("\n--- Operações CRUD no Banco de Dados Simulado ---")
-                    print("Todas as Leituras:", obter_leituras())
                     if database["leituras"]:
                         primeira_leitura = obter_leitura_por_id(0)
-                        print("Primeira Leitura:", primeira_leitura)
- 
 
                         leitura_sensor.processar_e_inserir_dados()
-                        print(leitura_sensor)
+                        # print(leitura_sensor)
 
                         # Cria uma nova leitura para atualizar
                         nova_leitura = {
@@ -145,10 +125,10 @@ def main(host = '192.168.1.35', port = 12345):
                             "irrigacao": False
                         }
                         atualizar_leitura(0, nova_leitura)
-                        print("Leitura Atualizada:", obter_leitura_por_id(0))
+                        # print("Leitura Atualizada:", obter_leitura_por_id(0))
                        
                         deletar_leitura(len(database["leituras"]) - 1)
-                        print("Leitura Deletada. Leituras Restantes:", obter_leituras())
+                        # print("Leitura Deletada. Leituras Restantes:", obter_leituras())
                     else:
                         print("Banco de dados está vazio")
 
