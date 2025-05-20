@@ -2,11 +2,9 @@ import socket
 import json
 import random
 import os
+from connection.connection_db import ConnectionDB
+from controller.leitura_sensor_controller import LeituraSensorController
 
-# Configurações do servidor
-HOST = '192.168.1.43'  # Endereço IP do computador (localhost)
-PORT = 12345           # Porta para a comunicação
-BUFFER_SIZE = 1024
 
 # Banco de dados SQL simulado em Python (dicionário)
 database = {
@@ -49,23 +47,13 @@ def deletar_leitura(id):
     else:
         print("ID de leitura inválido.")
 
-# Função para salvar os dados em um arquivo JSON
+# Função para salvar os dados em um arquivo JSON (sobrescreve o arquivo, não gera lista)
 def salvar_console_print_json(dados):
     try:
         os.makedirs("data", exist_ok=True)
         caminho = "data/console_print.json"
-        # Tenta ler o arquivo existente
-        if os.path.exists(caminho):
-            with open(caminho, 'r', encoding='utf-8') as f:
-                estrutura = json.load(f)
-            # Garante que existe a chave "data" como lista
-            if "data" not in estrutura or not isinstance(estrutura["data"], list):
-                estrutura["data"] = []
-        else:
-            estrutura = {"data": []}
-
-        # Adiciona a nova leitura
-        estrutura["data"].append({
+        # Salva apenas o último dado recebido, sobrescrevendo o arquivo
+        estrutura = {
             "temperatura": dados.get("temperatura", 0.0),
             "umidade": dados.get("umidade", 0.0),
             "leitura_ldr": dados.get("leitura_ldr", 0),
@@ -73,25 +61,30 @@ def salvar_console_print_json(dados):
             "potassio": dados.get("potassio", False),
             "fosforo": dados.get("fosforo", False),
             "irrigacao": dados.get("irrigacao", "")
-        })
-
-        # Salva de volta
+        }
         with open(caminho, 'w', encoding='utf-8') as f:
             json.dump(estrutura, f, indent=4, ensure_ascii=False)
-        print("Dados salvos em data/console_print.json")
+        print("Dados salvos em data/console_print.json (sobrescrito)")
     except Exception as e:
         print(f"Erro ao salvar dados em JSON: {e}")
 
 # Função principal para receber dados do ESP32 e processá-los
-def main():
+def main(host = '192.168.1.35', port = 12345):
     global potassio_atual, fosforo_atual
+
+    connection = ConnectionDB()
+    connection.connect_to_oracle()
+
+    leitura_sensor = LeituraSensorController(connection)
+
+    BUFFER_SIZE = 1024
 
     # Cria o socket do servidor
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind((HOST, PORT))
+    server_socket.bind((host, port))
     server_socket.listen(1)  # Espera por apenas uma conexão
 
-    print(f"Servidor aguardando conexão em {HOST}:{PORT}...")
+    print(f"Servidor aguardando conexão em {host}:{port}...")
 
     try:
         while True:
@@ -136,6 +129,10 @@ def main():
                     if database["leituras"]:
                         primeira_leitura = obter_leitura_por_id(0)
                         print("Primeira Leitura:", primeira_leitura)
+ 
+
+                        leitura_sensor.processar_e_inserir_dados()
+                        print(leitura_sensor)
 
                         # Cria uma nova leitura para atualizar
                         nova_leitura = {
@@ -170,9 +167,6 @@ def main():
 
     except Exception as e:
         print(f"Erro ao iniciar o servidor: {e}")
-    finally:
-        server_socket.close()
-        print("Servidor encerrado.")
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

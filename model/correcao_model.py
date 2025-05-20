@@ -1,12 +1,12 @@
 # Classe modelo da Correção
-from datetime import datetime as Datetime
+from oracledb import Date
 
 class CorrecaoModel:
     def __init__(self,
                  id_correcao:int=None,
                  id_area_plantio:int=None,
                  tipo_correcao:str=None,
-                 data_hora:str=Datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                 data_hora:str=Date.today,
                  quantidade_aplicada:float=None,
                  valor_anterior:float=None,
                  valor_corrigido:float=None,
@@ -19,7 +19,6 @@ class CorrecaoModel:
         self.set_quantidade_aplicada(quantidade_aplicada)
         self.set_valor_anterior(valor_anterior)
         self.set_valor_corrigido(valor_corrigido)
-
 
     # Getters e Setters
     def get_id_correcao(self) -> int:
@@ -49,10 +48,10 @@ class CorrecaoModel:
         else:
             raise ValueError("tipo_correcao não pode ser None")
         
-    def get_data_hora(self) -> Datetime:
+    def get_data_hora(self) -> Date:
         return self.data_hora
     
-    def set_data_hora(self, data_hora:Datetime):
+    def set_data_hora(self, data_hora:Date):
         if data_hora is not None:
             self.data_hora = data_hora
         else:
@@ -87,6 +86,3 @@ class CorrecaoModel:
         
     def __str__(self):
         return f"CorrecaoModel(id_correcao={self.id_correcao}, id_area_plantio={self.id_area_plantio}, tipo_correcao={self.tipo_correcao}, data_hora={self.data_hora}, quantidade_aplicada={self.quantidade_aplicada}, valor_anterior={self.valor_anterior}, valor_corrigido={self.valor_corrigido})"
-    
-    
-        
