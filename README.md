@@ -135,29 +135,80 @@ A bomba de irrigação será ligada automaticamente quando:
 
 ## 📁 Estrutura de pastas
 ```
-├── 📁 arduino/                  # Códigos para o ESP32 (Wokwi)
-│   └── main.ino                # Código principal do ESP32 (simulação dos sensores e lógica)
+Claro! Abaixo está a estrutura do projeto em formato Markdown com base na imagem que você compartilhou:
+
+```markdown
+# Estrutura do Projeto: SISTEMA-DE-IRRIGACAO
+
+```
+Claro! Abaixo está a estrutura do projeto em formato Markdown com base nas imagens que você compartilhou:
+
+```markdown
+# Estrutura do Projeto: SISTEMA-DE-IRRIGACAO
+
+Claro! Abaixo está a estrutura do projeto em formato Markdown com base nas imagens que você compartilhou:
+
+```markdown
+# Estrutura do Projeto: SISTEMA-DE-IRRIGACAO
+
+SISTEMA-DE-IRRIGACAO
 │
-├── 📁 python/                   # Integração Python com banco de dados e APIs
-│   ├── db/                     
-│   │   ├── database.py         # Script para conectar ao banco SQL (SQLite, MySQL etc.)
-│   │   └── models.py           # Estrutura das tabelas e queries SQL
-│   ├── sensors/                
-│   │   └── receiver.py         # Script que recebe e processa dados do ESP32
-│   ├── climate/                
-│   │   └── api_client.py       # (Opcional) Cliente para obter dados climáticos de API externa
-│   └── main.py                 # Script principal Python que integra tudo
+├── __pycache__/
+├── .vscode/
+├── assets/
+│   ├── imagens_dos_circuitos/
+│   └── logo-fiap.png
 │
-├── 📁 docs/                     # Documentação do projeto
-│   └── relatorio.pdf           # Relatório do projeto (ou README.md)
+├── connection/
+│   ├── __pycache__/
+│   ├── __init__.py
+│   └── connection_db.py
 │
-├── 📁 dashboard/               # (Opcional) Interface para visualização de dados
-│   └── app.py                  # Código para o dashboard (Flask, Streamlit etc.)
+├── controller/
+│   ├── __pycache__/
+│   ├── __init__.py
+│   ├── area_plantio_controller.py
+│   ├── cultura_controller.py
+│   └── sensor_controller.py
 │
-├── 📁 wokwi-project/           # Arquivos de simulação do Wokwi
-│   └── diagram.json            # Arquivo de configuração do circuito na Wokwi
+├── dashboard/
+│   ├── __init__.py
+│   └── app.py
 │
-└── requirements.txt            # Dependências Python
+├── model/
+│   ├── __pycache__/
+│   ├── __init__.py
+│   ├── area_plantio_model.py
+│   ├── correcao_model.py
+│   ├── cultura_model.py
+│   ├── leitura_sensor_model.py
+│   └── sensor_model.py
+│
+├── sensor_fosforo/
+├── sensor_potassio/
+├── sensor_solo/
+│   ├── .vscode/
+│   ├── data/
+│   ├── src/
+│   ├── .gitignore
+│   ├── diagram.json
+│   ├── main.py
+│   ├── platformio.ini
+│   ├── python-installer.exe
+│   └── wokwi.toml
+│
+├── .env
+├── .env copy
+├── .gitignore
+├── api_climatica.py
+├── main.ino
+├── main.py
+├── README.md
+└── requirements.txt
+```
+
+
+
 ```
 💾 Instalação
 
