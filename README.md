@@ -95,74 +95,34 @@ A bomba de irrigação será ligada automaticamente quando:
 
 ## 📁 Estrutura de pastas
 ```
-Sistema-de-Irrigacao-Inteligente-com-Sensores
-├── pycache/ # Arquivos compilados automaticamente pelo Python
-├── .vscode/ # Configurações do Visual Studio Code
-├── imagens_dos_circuitos/ # Imagens utilizadas na documentação ou no projeto
-├── sensor_fosforo/ # Código relacionado ao sensor de fósforo
-├── sensor_ph/ # Código relacionado ao sensor de pH
-├── sensor_potassio/ # Código relacionado ao sensor de potássio
-├── sensor_umidade/ # Código relacionado ao sensor de umidade do solo
-├── main.py # Script principal do sistema
-└── README.md # Documentação do projeto
+├── 📁 arduino/                  # Códigos para o ESP32 (Wokwi)
+│   └── main.ino                # Código principal do ESP32 (simulação dos sensores e lógica)
+│
+├── 📁 python/                   # Integração Python com banco de dados e APIs
+│   ├── db/                     
+│   │   ├── database.py         # Script para conectar ao banco SQL (SQLite, MySQL etc.)
+│   │   └── models.py           # Estrutura das tabelas e queries SQL
+│   ├── sensors/                
+│   │   └── receiver.py         # Script que recebe e processa dados do ESP32
+│   ├── climate/                
+│   │   └── api_client.py       # (Opcional) Cliente para obter dados climáticos de API externa
+│   └── main.py                 # Script principal Python que integra tudo
+│
+├── 📁 docs/                     # Documentação do projeto
+│   └── relatorio.pdf           # Relatório do projeto (ou README.md)
+│
+├── 📁 dashboard/               # (Opcional) Interface para visualização de dados
+│   └── app.py                  # Código para o dashboard (Flask, Streamlit etc.)
+│
+├── 📁 wokwi-project/           # Arquivos de simulação do Wokwi
+│   └── diagram.json            # Arquivo de configuração do circuito na Wokwi
+│
+└── requirements.txt            # Dependências Python
+
 ```
 ## 🔧 Como executar o código
 
-1. clone o repositório
-```bash
-git clone https://github.com/seuusuario/Sistema-de-Irrigacao-Inteligente-com-Sensores.git
-cd Sistema-de-Irrigacao-Inteligente-com-Sensores
-```
 
-2. Crie um ambiente virtual
-```bash
-python -m venv venv
-source venv/bin/activate  # No Windows use: venv\Scripts\activate
-```
-3. Instale as dependências:
-```bash
-pip install fastapi uvicorn
-```
-4. Execute o servidor FastAPI:
-```bash
-uvicorn main:app --reload
-```
-5. Teste a API no navegador ou com uma ferramenta como Postman
-```
-Após rodar o comando:
-
-
-uvicorn main:app --reload
-
-A aplicação estará disponível localmente em:
-
-arduino
-Copiar código
-http://localhost:8000
-Você pode testá-la de duas formas:
-
-🔹 No navegador:
-Acesse http://localhost:8000/docs
-Essa é uma documentação interativa gerada automaticamente, onde você pode testar o endpoint POST /sensor enviando um dado como:
-
-json
-Copiar código
-{
-  "presenca": true
-}
-🔹 Com o Postman ou curl:
-Envie uma requisição POST para:
-
-bash
-Copiar código
-http://localhost:8000/sensor
-Com o corpo da requisição (JSON):
-
-json
-Copiar código
-{
-  "presenca": true
-}
 ```
 ## 🗃 Histórico de lançamentos
 
