@@ -114,6 +114,9 @@ A bomba de irrigação será ligada automaticamente quando:
 
 ## imagens dos circuitos
 
+### Sensor Solo (principal, utilizado no projeto)
+<img src="assets/imagens_dos_circuitos/imagens/sensor_solo.png" alt="Sensor solo" width="300">
+
 ### Sensor de Umidade
 <img src="assets/imagens_dos_circuitos/imagens/captura-umidade.png" alt="Sensor de umidade" width="300">
 
@@ -125,10 +128,6 @@ A bomba de irrigação será ligada automaticamente quando:
 
 ### Sensor de Potássio
 <img src="assets/imagens_dos_circuitos/imagens/sensor_potassio.png" alt="Sensor de potássio" width="300">
-
-### sensor solo
-<img src="assets/imagens_dos_circuitos/imagens/sensor_solo.png" alt="Sensor solo" width="300">
-
 
 ---
 
@@ -220,11 +219,15 @@ venv\Scripts\activate         # Windows
 pip install -r requirements.txt
 ```
 4. Localizar o arquivo prog1.ino no diretório sensor_solo/src:
+
   1. Identificar a variável *server_ip (atualmente na linha 56)
+
   1. Inserir o número do IP da sua máquina
 
 5. Localizar o arquivo main.py no diretório sensor_solo/:
+
   1. Identificar o método def main (atualmente na linha 162)
+
   2. Na variável host inserir IP da sua máquina 
 
 ## 🔧 Como executar o código
