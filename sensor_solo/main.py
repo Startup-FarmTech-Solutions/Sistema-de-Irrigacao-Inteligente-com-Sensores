@@ -5,7 +5,6 @@ import os
 from connection.connection_db import ConnectionDB
 from controller.leitura_sensor_controller import LeituraSensorController
 
-
 # Banco de dados SQL simulado em Python (dicionário)
 database = {
     "leituras": []
