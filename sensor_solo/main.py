@@ -1,7 +1,40 @@
+
+""""
+main.py
+Este módulo implementa um servidor TCP para receber, processar e armazenar leituras de sensores de solo enviadas por um dispositivo ESP32. Ele simula operações de banco de dados (CRUD) em memória, manipula dados de nutrientes (potássio e fósforo), salva leituras em arquivo JSON e integra-se com um controlador de leitura de sensores e um banco de dados Oracle.
+Principais Funcionalidades:
+- crie uma variavel de ambiente .venv para rodar.
+- Inicializa e gerencia um servidor TCP para comunicação com o ESP32.
+- Recebe e processa mensagens JSON contendo dados de sensores (temperatura, umidade, pH, LDR, potássio, fósforo, irrigação).
+- Simula operações CRUD (criar, ler, atualizar, deletar) sobre leituras em um banco de dados Python (dicionário).
+- Simula a adição de potássio e fósforo ao solo conforme comandos recebidos.
+- Salva a última leitura recebida em um arquivo JSON sobrescrito.
+- Integra-se com um controlador de leitura de sensores e um banco de dados Oracle.
+- Fornece logs detalhados das operações e tratamento de exceções.
+Funções:
+- adicionar_leitura(leitura): Adiciona uma nova leitura ao banco de dados simulado.
+- obter_leituras(): Recupera todas as leituras armazenadas.
+- obter_leitura_por_id(id): Recupera uma leitura específica pelo índice.
+- atualizar_leitura(id, nova_leitura): Atualiza uma leitura existente pelo índice.
+- deletar_leitura(id): Remove uma leitura pelo índice.
+- salvar_console_print_json(dados): Salva os dados recebidos em um arquivo JSON sobrescrevendo o conteúdo anterior.
+- main(host, port): Função principal que executa o servidor TCP, processa leituras, executa operações CRUD e integra com o controlador de sensores.
+Variáveis Globais:
+- database: Dicionário simulando um banco de dados de leituras.
+- potassio_atual, fosforo_atual: Estoque atual simulado de potássio e fósforo.
+Uso:
+Execute este módulo diretamente para iniciar o servidor TCP e aguardar conexões do ESP32. 
+Certifique-se de que o dispositivo ESP32 esteja configurado para enviar dados no formato JSON esperado.
+"""
+#importando as bibliotecas necessárias
 import socket
 import json
 import random
 import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from connection.connection_db import ConnectionDB
 from controller.leitura_sensor_controller import LeituraSensorController
 
@@ -16,14 +49,38 @@ fosforo_atual = 0
 
 # Função para adicionar uma leitura ao banco de dados simulado
 def adicionar_leitura(leitura):
+    """
+    Adiciona uma nova leitura ao banco de dados.
+
+    Parâmetros:
+        leitura (dict): Um dicionário contendo os dados da leitura a ser adicionada.
+
+    Efeitos colaterais:
+        Adiciona a leitura à lista 'leituras' no banco de dados global e imprime uma mensagem de confirmação.
+    """
     database["leituras"].append(leitura)
 
 # Função para recuperar todas as leituras do banco de dados simulado
 def obter_leituras():
+    """
+    Retrieve all soil sensor readings from the database.
+
+    Returns:
+        list: A list containing all readings stored in the 'leituras' key of the database.
+    """
     return database["leituras"]
 
 # Função para recuperar uma leitura específica por ID (simulado pelo índice)
 def obter_leitura_por_id(id):
+    """
+    Retrieve a reading from the database by its ID.
+
+    Args:
+        id (int): The index of the reading to retrieve.
+
+    Returns:
+        dict or None: The reading at the specified index if it exists, otherwise None.
+    """
     if 0 <= id < len(database["leituras"]):
         return database["leituras"][id]
     else:
@@ -31,6 +88,17 @@ def obter_leitura_por_id(id):
 
 # Função para atualizar uma leitura existente (simulado pelo índice)
 def atualizar_leitura(id, nova_leitura):
+    """
+    Atualiza uma leitura existente no banco de dados pelo seu ID.
+
+    Parâmetros:
+        id (int): O índice da leitura a ser atualizada na lista de leituras.
+        nova_leitura (any): O novo valor da leitura que substituirá o valor atual.
+
+    Comportamento:
+        - Se o ID fornecido estiver dentro do intervalo válido da lista de leituras, a leitura correspondente será atualizada com o novo valor.
+        - Caso o ID seja inválido, uma mensagem de erro será exibida.
+    """
     if 0 <= id < len(database["leituras"]):
         database["leituras"][id] = nova_leitura
     else:
@@ -38,6 +106,16 @@ def atualizar_leitura(id, nova_leitura):
 
 # Função para deletar uma leitura (simulado pelo índice)
 def deletar_leitura(id):
+    """
+    Remove uma leitura do banco de dados pelo índice fornecido.
+
+    Parâmetros:
+        id (int): O índice da leitura a ser removida da lista 'leituras' no banco de dados.
+
+    Comportamento:
+        - Se o índice for válido (dentro do intervalo da lista), a leitura correspondente é removida.
+        - Caso contrário, exibe uma mensagem indicando que o ID é inválido.
+    """
     if 0 <= id < len(database["leituras"]):
         del database["leituras"][id]
     else:
@@ -45,6 +123,22 @@ def deletar_leitura(id):
 
 # Função para salvar os dados em um arquivo JSON (sobrescreve o arquivo, não gera lista)
 def salvar_console_print_json(dados):
+    """
+    Salva os dados fornecidos em um arquivo JSON localizado em 'data/console_print.json', sobrescrevendo o conteúdo anterior.
+
+    Parâmetros:
+        dados (dict): Dicionário contendo as chaves:
+            - "temperatura" (float): Valor da temperatura. Padrão 0.0 se ausente.
+            - "umidade" (float): Valor da umidade. Padrão 0.0 se ausente.
+            - "leitura_ldr" (int): Valor da leitura do sensor LDR. Padrão 0 se ausente.
+            - "ph" (float): Valor do pH. Padrão 0.0 se ausente.
+            - "potassio" (bool): Indica presença de potássio. Padrão False se ausente.
+            - "fosforo" (bool): Indica presença de fósforo. Padrão False se ausente.
+            - "irrigacao" (str): Estado da irrigação. Padrão string vazia se ausente.
+
+    Exceções:
+        Exibe mensagem de erro no console caso ocorra alguma exceção durante o salvamento.
+    """
     try:
         os.makedirs("data", exist_ok=True)
         caminho = "data/console_print.json"
@@ -65,6 +159,28 @@ def salvar_console_print_json(dados):
 
 # Função principal para receber dados do ESP32 e processá-los
 def main(host = '192.168.1.35', port = 12345):
+    """
+    Inicia um servidor TCP para receber leituras de sensores de um dispositivo ESP32, processar os dados recebidos,
+    realizar operações CRUD em um banco de dados simulado, simular adição de potássio e fósforo, e responder ao cliente.
+    Parâmetros:
+        host (str): Endereço IP no qual o servidor irá escutar conexões. Padrão é '192.168.1.35'.
+        port (int): Porta na qual o servidor irá escutar conexões. Padrão é 12345.
+    Funcionalidades:
+        - Inicializa conexão com banco de dados Oracle.
+        - Cria um socket TCP para aguardar conexões do ESP32.
+        - Recebe mensagens JSON contendo leituras de sensores.
+        - Decodifica e processa os dados recebidos, adicionando-os ao banco de dados simulado.
+        - Simula a adição de potássio e fósforo conforme comandos recebidos.
+        - Realiza operações CRUD (criar, ler, atualizar, deletar) sobre as leituras armazenadas.
+        - Salva os dados recebidos em um arquivo JSON.
+        - Envia resposta de confirmação ou erro ao cliente.
+        - Exibe logs detalhados das operações realizadas e dos dados recebidos.
+        - Trata erros de decodificação JSON e outros erros inesperados, enviando mensagens apropriadas ao cliente.
+    Observações:
+        - O servidor aceita apenas uma conexão por vez.
+        - O loop principal permanece ativo até que ocorra uma exceção não tratada.
+        - Variáveis globais 'potassio_atual' e 'fosforo_atual' são utilizadas para simular o estoque atual desses nutrientes.
+    """
     global potassio_atual, fosforo_atual
 
     connection = ConnectionDB()
@@ -147,5 +263,5 @@ def main(host = '192.168.1.35', port = 12345):
     except Exception as e:
         print(f"Erro ao iniciar o servidor: {e}")
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+     main()
