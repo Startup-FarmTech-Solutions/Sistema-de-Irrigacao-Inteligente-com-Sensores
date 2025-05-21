@@ -136,7 +136,6 @@ A bomba de irrigação será ligada automaticamente quando:
 ## 📁 Estrutura de pastas
 ```
 
-
 ```
 Abaixo está a estrutura do projeto em formato Markdown:
 
@@ -202,7 +201,7 @@ SISTEMA-DE-IRRIGACAO
 └── requirements.txt
 ```
 
-
+## ▶️ Como utilizar:
 ```
 💾 Instalação
 
@@ -220,37 +219,33 @@ venv\Scripts\activate         # Windows
 ```
 pip install -r requirements.txt
 ```
+4. Localizar o arquivo prog1.ino no diretório sensor_solo/src:
+  1. Identificar a variável *server_ip (atualmente na linha 56)
+  1. Inserir o número do IP da sua máquina
+
+5. Localizar o arquivo main.py no diretório sensor_solo/:
+  1. Identificar o método def main (atualmente na linha 162)
+  2. Na variável host inserir IP da sua máquina 
+
 ## 🔧 Como executar o código
+
 1. 📟 Simulação no Wokwi
    
- 1. Acesse https://wokwi.com/
+   1. Acesse o arquivo driagram.json em sensor_solo/
 
-   2. Importe o arquivo diagram.json da pasta wokwi-project/
+   2. Inicie a simulação clicando em "Start Simulation"
 
-   3. Carregue o código main.ino da pasta arduino/
+   3. Observe os dados dos sensores sendo exibidos no display LCD e  no console da simulação (ou simulador serial)
 
-   4. Inicie a simulação clicando em "Start Simulation"
-
-   5. Observe os dados dos sensores sendo exibidos no console da simulação (ou simulador serial)
 
 2. 🐍 Execução do Código Python
 
-   1.Acesse a pasta python/:
-   ```
-   cd python
-   ```
+   1.Acesse o arquivo main.py (na raiz do projeto):
 
    2.Execute o script principal:
    ```
    python main.py
    ```
-   Esse script:
-
-   .Conecta ao banco de dados
-
-   .Recebe dados dos sensores simulados
-
-   .Armazena os dados e toma decisões de irrigação
 
 .Consulta API climática
 
