@@ -29,5 +29,5 @@ if __name__ == "__main__":
     connection = ConnectionDB()
     connection.connect_to_oracle() # Conecte ao banco de dados
     menu = Menu() # Instancia a classe menu
-    menu.display_menu()  # Exibe o menu principal
+    menu.display_menu()  # Exibe o menu principal'''
     
