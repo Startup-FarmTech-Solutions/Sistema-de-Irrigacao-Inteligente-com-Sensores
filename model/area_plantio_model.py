@@ -1,6 +1,42 @@
 # Classe modelo da Área de Plantio  
 
 class AreaPlantioModel:
+    """
+    Classe AreaPlantioModel
+    Representa uma área de plantio com informações geográficas e descrição.
+    Atributos:
+        id_area_plantio (int): Identificador único da área de plantio.
+        area (str): Valor total da área de plantio ocupada (ex: "1000 m²").
+        latitude (float): Latitude geográfica da área de plantio.
+        longitude (float): Longitude geográfica da área de plantio.
+        descricao_local (str): Descrição do local da área de plantio.
+    Métodos:
+        __init__(id_area_plantio, area, latitude, longitude, descricao_local):
+            Inicializa uma nova instância da classe AreaPlantioModel.
+        get_id_area_plantio() -> int:
+            Retorna o identificador da área de plantio.
+        set_id_area_plantio(id_area_plantio: int):
+            Define o identificador da área de plantio. Lança ValueError se for None.
+        get_area() -> str:
+            Retorna o valor total da área de plantio.
+        set_area(area: str):
+            Define o valor total da área de plantio. Lança ValueError se for None.
+        get_latitude() -> float:
+            Retorna a latitude da área de plantio.
+        set_latitude(latitude: float):
+            Define a latitude da área de plantio. Lança ValueError se for None.
+        get_longitude() -> float:
+            Retorna a longitude da área de plantio.
+        set_longitude(longitude: float):
+            Define a longitude da área de plantio. Lança ValueError se for None.
+        get_descricao_local() -> str:
+            Retorna a descrição do local da área de plantio.
+        set_descricao_local(descricao_local: str):
+            Define a descrição do local da área de plantio. Lança ValueError se for None.
+    Exceções:
+        ValueError: Lançada quando algum dos atributos obrigatórios recebe valor None.
+    """
+    
     def __init__(self,
                  id_area_plantio:int=None,
                  area:str=None, # valor total da área de plantio ocupada

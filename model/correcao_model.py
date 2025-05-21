@@ -2,6 +2,51 @@
 from oracledb import Date
 
 class CorrecaoModel:
+    """
+    Classe CorrecaoModel
+    Representa uma correção realizada em uma área de plantio, armazenando informações relevantes como tipo de correção, data/hora, quantidade aplicada e valores antes e depois da correção.
+    Atributos:
+        id_correcao (int): Identificador único da correção. Não pode ser None.
+        id_area_plantio (int): Identificador da área de plantio associada à correção. Não pode ser None.
+        tipo_correcao (str): Tipo de correção realizada (ex: fertilização, irrigação, etc). Não pode ser None.
+        data_hora (Date): Data e hora em que a correção foi realizada. Não pode ser None.
+        quantidade_aplicada (float): Quantidade do insumo ou ação aplicada na correção. Não pode ser None.
+        valor_anterior (float): Valor do parâmetro antes da correção. Não pode ser None.
+        valor_corrigido (float): Valor do parâmetro após a correção. Não pode ser None.
+    Métodos:
+        __init__(self, id_correcao, id_area_plantio, tipo_correcao, data_hora, quantidade_aplicada, valor_anterior, valor_corrigido):
+            Inicializa uma nova instância de CorrecaoModel com os valores fornecidos.
+        get_id_correcao(self) -> int:
+            Retorna o identificador da correção.
+        set_id_correcao(self, id_correcao: int):
+            Define o identificador da correção. Lança ValueError se None.
+        get_id_area_plantio(self) -> int:
+            Retorna o identificador da área de plantio.
+        set_id_area_plantio(self, id_area_plantio: int):
+            Define o identificador da área de plantio. Lança ValueError se None.
+        get_tipo_correcao(self) -> str:
+            Retorna o tipo de correção.
+        set_tipo_correcao(self, tipo_correcao: str):
+            Define o tipo de correção. Lança ValueError se None.
+        get_data_hora(self) -> Date:
+            Retorna a data e hora da correção.
+        set_data_hora(self, data_hora: Date):
+            Define a data e hora da correção. Lança ValueError se None.
+        get_quantidade_aplicada(self) -> float:
+            Retorna a quantidade aplicada na correção.
+        set_quantidade_aplicada(self, quantidade_aplicada: float):
+            Define a quantidade aplicada. Lança ValueError se None.
+        get_valor_anterior(self) -> float:
+            Retorna o valor anterior à correção.
+        set_valor_anterior(self, valor_anterior: float):
+            Define o valor anterior à correção. Lança ValueError se None.
+        get_valor_corrigido(self) -> float:
+            Retorna o valor corrigido após a correção.
+        set_valor_corrigido(self, valor_corrigido: float):
+            Define o valor corrigido. Lança ValueError se None.
+        __str__(self):
+            Retorna uma representação em string da instância de CorrecaoModel.
+    """
     def __init__(self,
                  id_correcao:int=None,
                  id_area_plantio:int=None,

@@ -1,6 +1,26 @@
 # Classe modelo da Cultura
 
 class CulturaModel:
+    """
+    CulturaModel representa uma cultura agrícola no sistema de irrigação inteligente.
+    Atributos:
+        id_cultura (int): Identificador único da cultura.
+        nome_cultura (str): Nome da cultura.
+    Métodos:
+        __init__(id_cultura: int = None, nome_cultura: str = None):
+            Inicializa uma nova instância de CulturaModel com os valores fornecidos.
+        get_cultura_id() -> int:
+            Retorna o identificador da cultura.
+        set_cultura_id(id_cultura: int):
+            Define o identificador da cultura.
+        get_nome_cultura() -> str:
+            Retorna o nome da cultura.
+        set_nome_cultura(nome_cultura: str):
+            Define o nome da cultura. Lança ValueError se nome_cultura for None.
+    Exceções:
+        ValueError: Lançada por set_nome_cultura se nome_cultura for None.
+    """
+    
     def __init__(self,
                  id_cultura:int=None,
                  nome_cultura:str=None

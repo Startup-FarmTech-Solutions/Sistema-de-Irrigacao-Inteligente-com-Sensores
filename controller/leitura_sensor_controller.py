@@ -24,6 +24,14 @@ class LeituraSensorController:
 
     def menu_leitura(self, conn):
         """
+        Exibe um menu interativo para o usuário relacionado à leitura de sensores e executa a ação escolhida.
+        Parâmetros:
+            conn: Objeto de conexão com o banco de dados utilizado para consultar leituras de sensores.
+        Fluxo:
+            - Permite ao usuário inserir uma nova leitura de sensor.
+            - Permite visualizar leituras de sensores já cadastradas.
+            - Permite sair do menu.
+        O menu permanece ativo até que o usuário escolha a opção de sair.
         Exibe o menu interativo para o usuário e executa as ações escolhidas.
         """
         while True:
@@ -50,6 +58,16 @@ class LeituraSensorController:
                 print("Opção inválida! Por favor, escolha uma opção válida.")
 
     def inserir_leitura_sensor(self, leitura: LeituraSensorModel):
+        """
+        Insere uma nova leitura de sensor no banco de dados.
+
+        Args:
+            leitura (LeituraSensorModel): Objeto contendo os dados da leitura do sensor a ser inserida.
+
+        O método executa um comando INSERT na tabela 'leitura_sensor' com os valores fornecidos pelo objeto 'leitura'.
+        Caso a inserção seja bem-sucedida, uma mensagem de sucesso é exibida. Caso contrário, uma mensagem de erro é exibida.
+        """
+
         query = """
             INSERT INTO leitura_sensor (id_sensor, id_area_plantio, data_hora, temperatura, umidade, leitura_ldr, ph, potassio, fosforo, irrigacao)
             VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)
@@ -146,6 +164,32 @@ class LeituraSensorController:
             return []
 
     def processar_e_inserir_dados(self, nome_arquivo="data/console_print.json"):
+        """
+        Processa dados de sensores a partir de um arquivo JSON e insere leituras no banco de dados.
+        Este método carrega dados de sensores de um arquivo JSON especificado, processa cada entrada,
+        atualiza os valores acumulados de potássio e fósforo, converte e valida os dados recebidos,
+        e insere novas leituras no banco de dados caso ainda não existam. Caso o arquivo contenha
+        um único dicionário, ele é encapsulado em uma lista para processamento uniforme.
+        Parâmetros:
+            nome_arquivo (str): Caminho para o arquivo JSON contendo os dados dos sensores.
+                                O padrão é "data/console_print.json".
+        Fluxo:
+            - Carrega os dados do arquivo JSON.
+            - Recupera os últimos IDs de sensor e área de plantio do banco de dados.
+            - Para cada item nos dados:
+                - Atualiza os valores de potássio e fósforo conforme flags presentes.
+                - Converte o campo de irrigação para o formato esperado.
+                - Cria uma instância de LeituraSensorModel com os dados processados.
+                - Verifica se a leitura já existe; se não, insere no banco de dados.
+        Observações:
+            - Caso não haja dados ou os IDs não possam ser recuperados, o método imprime uma mensagem e retorna.
+            - O método utiliza valores aleatórios para simular a adição de potássio e fósforo.
+            - Apenas leituras únicas são inseridas, evitando duplicidade.
+        Exceções:
+            - Imprime mensagens de erro caso o formato do JSON seja inválido ou dados essenciais estejam ausentes.
+        Retorno:
+            None
+        """
         dados_json = self.carregar_dados_json(nome_arquivo)
         if not dados_json:
             print("Nenhum dado para processar.")
@@ -204,6 +248,21 @@ class LeituraSensorController:
                 print(f"Leitura já existe: {leitura}. Ignorando inserção.")
 
     def leitura_ja_existe(self, leitura: LeituraSensorModel) -> bool:
+        """
+        Verifica se uma leitura de sensor já existe no banco de dados.
+
+        Esta função executa uma consulta SQL para verificar se já existe um registro na tabela
+        'leitura_sensor' com os mesmos valores de id_sensor, id_area_plantio, data_hora, temperatura,
+        umidade, leitura_ldr, ph, potassio, fosforo e irrigacao fornecidos pelo objeto LeituraSensorModel.
+
+        Args:
+            leitura (LeituraSensorModel): Objeto contendo os dados da leitura do sensor a ser verificada.
+
+        Returns:
+            bool: True se a leitura já existe no banco de dados, False caso contrário.
+        """
+        
+        # Verifica se a leitura já existe no banco de dados
         query = """
             SELECT 1 FROM leitura_sensor
             WHERE id_sensor = :1 AND id_area_plantio = :2 AND data_hora = :3 AND temperatura = :4

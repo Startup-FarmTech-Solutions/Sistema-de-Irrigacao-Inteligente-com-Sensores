@@ -2,6 +2,46 @@
 from datetime import date as Date
 
 class LeituraSensorModel:
+    """
+    Classe LeituraSensorModel
+    Representa uma leitura realizada por um sensor em uma área de plantio, armazenando informações relevantes como data/hora da leitura, valores de temperatura, umidade, leitura do sensor LDR, pH, potássio, fósforo e status de irrigação.
+    Atributos:
+        id_leitura_sensor (int, opcional): Identificador único da leitura do sensor.
+        id_sensor (int, opcional): Identificador do sensor que realizou a leitura.
+        id_area_plantio (int, opcional): Identificador da área de plantio associada à leitura.
+        data_hora (str, opcional): Data e hora em que a leitura foi realizada.
+        temperatura (float, opcional): Valor da temperatura registrada pelo sensor.
+        umidade (float, opcional): Valor da umidade registrada pelo sensor.
+        leitura_ldr (int, opcional): Valor da leitura do sensor LDR (luminosidade).
+        ph (float, opcional): Valor do pH do solo registrado.
+        potassio (float, opcional): Valor do potássio presente no solo.
+        fosforo (float, opcional): Valor do fósforo presente no solo.
+        irrigacao (chr, opcional): Status da irrigação no momento da leitura.
+    Métodos:
+        get_id_leitura_sensor() -> int: Retorna o identificador da leitura do sensor.
+        set_id_leitura_sensor(id_leitura_sensor: int): Define o identificador da leitura do sensor.
+        get_id_sensor() -> int: Retorna o identificador do sensor.
+        set_id_sensor(id_sensor: int): Define o identificador do sensor.
+        get_id_area_plantio() -> int: Retorna o identificador da área de plantio.
+        set_id_area_plantio(id_area_plantio: int): Define o identificador da área de plantio.
+        get_data_hora() -> Date: Retorna a data e hora da leitura.
+        set_data_hora(data_hora: Date): Define a data e hora da leitura.
+        get_temperatura() -> float: Retorna o valor da temperatura.
+        set_temperatura(temperatura: float): Define o valor da temperatura.
+        get_umidade() -> float: Retorna o valor da umidade.
+        set_umidade(umidade: float): Define o valor da umidade.
+        get_leitura_ldr() -> int: Retorna o valor da leitura do sensor LDR.
+        set_leitura_ldr(leitura_ldr: int): Define o valor da leitura do sensor LDR.
+        get_ph() -> float: Retorna o valor do pH.
+        set_ph(ph: float): Define o valor do pH.
+        get_potassio() -> float: Retorna o valor do potássio.
+        set_potassio(potassio: float): Define o valor do potássio.
+        get_fosforo() -> float: Retorna o valor do fósforo.
+        set_fosforo(fosforo: float): Define o valor do fósforo.
+        get_irrigacao() -> str: Retorna o status da irrigação.
+        set_irrigacao(irrigacao: str): Define o status da irrigação.
+        __str__(): Retorna uma representação em string do objeto LeituraSensorModel.
+    """
     def __init__(
             self,
             id_leitura_sensor: int = None,

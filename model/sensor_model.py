@@ -1,6 +1,36 @@
 # Classe modelo do Sensor
 
 class SensorModel:
+    """
+    SensorModel representa um sensor utilizado no sistema de irrigação inteligente.
+    Atributos:
+        id_sensor (int): Identificador único do sensor. Não pode ser None.
+        modelo (str): Modelo do sensor. Não pode ser None.
+        nome_sensor (str): Nome do sensor. Não pode ser None.
+        tipo_sensor (str): Tipo do sensor (ex: temperatura, umidade, etc). Não pode ser None.
+    Métodos:
+        __init__(id_sensor, modelo, nome_sensor, tipo_sensor):
+            Inicializa uma nova instância de SensorModel com os valores fornecidos.
+            Lança ValueError se algum dos parâmetros obrigatórios for None.
+        get_id_sensor() -> int:
+            Retorna o identificador do sensor.
+        set_id_sensor(id_sensor: int):
+            Define o identificador do sensor. Lança ValueError se id_sensor for None.
+        get_modelo() -> str:
+            Retorna o modelo do sensor.
+        set_modelo(modelo: str):
+            Define o modelo do sensor. Lança ValueError se modelo for None.
+        get_nome_sensor() -> str:
+            Retorna o nome do sensor.
+        set_nome_sensor(nome_sensor: str):
+            Define o nome do sensor. Lança ValueError se nome_sensor for None.
+        get_tipo_sensor() -> str:
+            Retorna o tipo do sensor.
+        set_tipo_sensor(tipo_sensor: str):
+            Define o tipo do sensor. Lança ValueError se tipo_sensor for None.
+        __str__():
+            Retorna uma representação em string do sensor, incluindo id, modelo, nome e tipo.
+    """
     def __init__(self,
                  id_sensor:int=None,
                  modelo:str=None,
