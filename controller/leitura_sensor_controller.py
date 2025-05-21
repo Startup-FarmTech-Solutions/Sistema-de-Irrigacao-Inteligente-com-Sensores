@@ -90,7 +90,6 @@ class LeituraSensorController:
                 ),
             )
             self.db.commit(self.conn_name)
-            print("Leitura do sensor inserida com sucesso.")
         else:
             print("Erro ao obter o cursor.")
 
@@ -151,7 +150,6 @@ class LeituraSensorController:
         try:
             with open(nome_arquivo, "r") as arquivo:
                 dados = json.load(arquivo)
-            print(f"Dados carregados do arquivo '{nome_arquivo}'.")
             return dados
         except FileNotFoundError:
             print(f"Erro: Arquivo '{nome_arquivo}' não encontrado.")
@@ -202,8 +200,6 @@ class LeituraSensorController:
             print("Erro ao recuperar último id_sensor ou id_area_plantio. Verifique se as tabelas estão populadas.")
             return
 
-        print(f"Ultimo ID Sensor: {ultimo_id_sensor}, Ultimo ID Area Plantio: {ultimo_id_area_plantio}")
-
         # Se o arquivo contém um único dicionário, encapsule em uma lista para processamento uniforme
         if isinstance(dados_json, dict):
             dados_list = [dados_json]
@@ -243,7 +239,6 @@ class LeituraSensorController:
 
             if not self.leitura_ja_existe(leitura):
                 self.inserir_leitura_sensor(leitura)
-                print(f"Potassio atual: {self.potassio_atual}, Fosforo atual: {self.fosforo_atual}")
             else:
                 print(f"Leitura já existe: {leitura}. Ignorando inserção.")
 
