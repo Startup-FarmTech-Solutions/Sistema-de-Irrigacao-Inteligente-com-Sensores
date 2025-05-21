@@ -114,6 +114,9 @@ A bomba de irrigação será ligada automaticamente quando:
 
 ## imagens dos circuitos
 
+### Sensor Solo (principal, utilizado no projeto)
+<img src="assets/imagens_dos_circuitos/imagens/sensor_solo.png" alt="Sensor solo" width="300">
+
 ### Sensor de Umidade
 <img src="assets/imagens_dos_circuitos/imagens/captura-umidade.png" alt="Sensor de umidade" width="300">
 
@@ -126,27 +129,17 @@ A bomba de irrigação será ligada automaticamente quando:
 ### Sensor de Potássio
 <img src="assets/imagens_dos_circuitos/imagens/sensor_potassio.png" alt="Sensor de potássio" width="300">
 
-### sensor solo
-<img src="assets/imagens_dos_circuitos/imagens/sensor_solo.png" alt="Sensor solo" width="300">
-
-
 ---
 
 
 ## 📁 Estrutura de pastas
 ```
-Claro! Abaixo está a estrutura do projeto em formato Markdown com base na imagem que você compartilhou:
-
-```markdown
-# Estrutura do Projeto: SISTEMA-DE-IRRIGACAO
 
 ```
-Claro! Abaixo está a estrutura do projeto em formato Markdown com base nas imagens que você compartilhou:
+Abaixo está a estrutura do projeto em formato Markdown:
 
 ```markdown
 # Estrutura do Projeto: SISTEMA-DE-IRRIGACAO
-
-Claro! Abaixo está a estrutura do projeto em formato Markdown com base nas imagens que você compartilhou:
 
 ```markdown
 # Estrutura do Projeto: SISTEMA-DE-IRRIGACAO
@@ -175,6 +168,9 @@ SISTEMA-DE-IRRIGACAO
 │   ├── __init__.py
 │   └── app.py
 │
+├── data/
+│   └──console_print.json
+│
 ├── model/
 │   ├── __pycache__/
 │   ├── __init__.py
@@ -184,11 +180,8 @@ SISTEMA-DE-IRRIGACAO
 │   ├── leitura_sensor_model.py
 │   └── sensor_model.py
 │
-├── sensor_fosforo/
-├── sensor_potassio/
 ├── sensor_solo/
 │   ├── .vscode/
-│   ├── data/
 │   ├── src/
 │   ├── .gitignore
 │   ├── diagram.json
@@ -207,9 +200,8 @@ SISTEMA-DE-IRRIGACAO
 └── requirements.txt
 ```
 
+## ▶️ Como utilizar:
 
-
-```
 💾 Instalação
 
 1. clone o repositório:
@@ -226,37 +218,37 @@ venv\Scripts\activate         # Windows
 ```
 pip install -r requirements.txt
 ```
+4. Localizar o arquivo prog1.ino no diretório sensor_solo/src:
+
+  1. Identificar a variável *server_ip (atualmente na linha 56)
+
+  1. Inserir o número do IP da sua máquina
+
+5. Localizar o arquivo main.py no diretório sensor_solo/:
+
+  1. Identificar o método def main (atualmente na linha 162)
+
+  2. Na variável host inserir IP da sua máquina 
+
 ## 🔧 Como executar o código
+
 1. 📟 Simulação no Wokwi
    
- 1. Acesse https://wokwi.com/
+   1. Acesse o arquivo driagram.json em sensor_solo/
 
-   2. Importe o arquivo diagram.json da pasta wokwi-project/
+   2. Inicie a simulação clicando em "Start Simulation"
 
-   3. Carregue o código main.ino da pasta arduino/
+   3. Observe os dados dos sensores sendo exibidos no display LCD e  no console da simulação (ou simulador serial)
 
-   4. Inicie a simulação clicando em "Start Simulation"
-
-   5. Observe os dados dos sensores sendo exibidos no console da simulação (ou simulador serial)
 
 2. 🐍 Execução do Código Python
 
-   1.Acesse a pasta python/:
-   ```
-   cd python
-   ```
+   1.Acesse o arquivo main.py (na raiz do projeto):
 
    2.Execute o script principal:
    ```
    python main.py
    ```
-   Esse script:
-
-   .Conecta ao banco de dados
-
-   .Recebe dados dos sensores simulados
-
-   .Armazena os dados e toma decisões de irrigação
 
 .Consulta API climática
 
