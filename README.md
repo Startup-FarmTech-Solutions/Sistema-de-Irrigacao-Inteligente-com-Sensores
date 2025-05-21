@@ -135,18 +135,13 @@ A bomba de irrigação será ligada automaticamente quando:
 
 ## 📁 Estrutura de pastas
 ```
-Claro! Abaixo está a estrutura do projeto em formato Markdown com base na imagem que você compartilhou:
 
-```markdown
-# Estrutura do Projeto: SISTEMA-DE-IRRIGACAO
 
 ```
-Claro! Abaixo está a estrutura do projeto em formato Markdown com base nas imagens que você compartilhou:
+Abaixo está a estrutura do projeto em formato Markdown:
 
 ```markdown
 # Estrutura do Projeto: SISTEMA-DE-IRRIGACAO
-
-Claro! Abaixo está a estrutura do projeto em formato Markdown com base nas imagens que você compartilhou:
 
 ```markdown
 # Estrutura do Projeto: SISTEMA-DE-IRRIGACAO
@@ -175,6 +170,9 @@ SISTEMA-DE-IRRIGACAO
 │   ├── __init__.py
 │   └── app.py
 │
+├── data/
+│   └──console_print.json
+│
 ├── model/
 │   ├── __pycache__/
 │   ├── __init__.py
@@ -184,11 +182,8 @@ SISTEMA-DE-IRRIGACAO
 │   ├── leitura_sensor_model.py
 │   └── sensor_model.py
 │
-├── sensor_fosforo/
-├── sensor_potassio/
 ├── sensor_solo/
 │   ├── .vscode/
-│   ├── data/
 │   ├── src/
 │   ├── .gitignore
 │   ├── diagram.json
@@ -206,7 +201,6 @@ SISTEMA-DE-IRRIGACAO
 ├── README.md
 └── requirements.txt
 ```
-
 
 
 ```
